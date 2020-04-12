@@ -18,7 +18,7 @@
 # our tests on top of it, build and run from there.
 
 KUBE_VERSION=1.11.0
-TEST_DIR=$GOPATH/src/github.com/kubernetes-incubator/external-storage/nfs/test/e2e
+TEST_DIR=$GOPATH/src/github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/test/e2e
 
 GOPATH=$TEST_DIR
 
