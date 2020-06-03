@@ -11,7 +11,7 @@ spec:
   serviceAccount: nfs-provisioner
   containers:
     - name: nfs-provisioner
-      image: quay.io/kubernetes_incubator/nfs-provisioner:latest
+      image: quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest
       ports:
         - name: nfs
           containerPort: 2049

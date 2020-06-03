@@ -1,16 +1,16 @@
 # NFS Ganesha server and external provisioner
 
-[![Docker Repository on Quay](https://quay.io/repository/kubernetes_incubator/nfs-provisioner/status "Docker Repository on Quay")](https://quay.io/repository/kubernetes_incubator/nfs-provisioner)
+[![Docker Repository on Quay](https://quay.io/repository/external_storage/nfs-ganesha-server-and-provisioner/status "Docker Repository on Quay")](https://quay.io/repository/external_storage/nfs-ganesha-server-and-provisioner)
 ```
-quay.io/kubernetes_incubator/nfs-provisioner
+quay.io/external_storage/nfs-ganesha-server-and-provisioner
 ```
 
 nfs-ganesha-server-and-external-provisioner is an out-of-tree dynamic provisioner for Kubernetes 1.4+. You can use it to quickly & easily deploy shared storage that works almost anywhere. Or it can help you write your own out-of-tree dynamic provisioner by serving as an example implementation of the requirements detailed in [the proposal](https://github.com/kubernetes/kubernetes/pull/30285). 
 
-It works just like in-tree dynamic provisioners: a `StorageClass` object can specify an instance of nfs-provisioner to be its `provisioner` like it specifies in-tree provisioners such as GCE or AWS. Then, the instance of nfs-provisioner will watch for `PersistentVolumeClaims` that ask for the `StorageClass` and automatically create NFS-backed `PersistentVolumes` for them. For more information on how dynamic provisioning works, see [the docs](http://kubernetes.io/docs/user-guide/persistent-volumes/) or [this blog post](http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html).
+It works just like in-tree dynamic provisioners: a `StorageClass` object can specify an instance of nfs-ganesha-server-and-external-provisioner to be its `provisioner` like it specifies in-tree provisioners such as GCE or AWS. Then, the instance of nfs-ganesha-server-and-external-provisioner will watch for `PersistentVolumeClaims` that ask for the `StorageClass` and automatically create NFS-backed `PersistentVolumes` for them. For more information on how dynamic provisioning works, see [the docs](http://kubernetes.io/docs/user-guide/persistent-volumes/) or [this blog post](http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html).
 
 ## Quickstart
-Choose some volume for your nfs-provisioner instance to store its state & data in and mount the volume at `/export` in `deploy/kubernetes/deployment.yaml`. It doesn't have to be a `hostPath` volume, it can e.g. be a PVC. Note that the volume must have a [supported file system](https://github.com/nfs-ganesha/nfs-ganesha/wiki/Fsalsupport#vfs) on it: any local filesystem on Linux is supported & NFS is not supported.
+Choose some volume for your nfs-ganesha-server-and-external-provisioner instance to store its state & data in and mount the volume at `/export` in `deploy/kubernetes/deployment.yaml`. It doesn't have to be a `hostPath` volume, it can e.g. be a PVC. Note that the volume must have a [supported file system](https://github.com/nfs-ganesha/nfs-ganesha/wiki/Fsalsupport#vfs) on it: any local filesystem on Linux is supported & NFS is not supported.
 ```yaml
 ...
   volumeMounts:
@@ -73,12 +73,12 @@ Deleting the provisioner deployment will cause any outstanding `PersistentVolume
 
 ## Running
 
-To deploy nfs-provisioner on a Kubernetes cluster see [Deployment](docs/deployment.md).
+To deploy nfs-ganesha-server-and-external-provisioner on a Kubernetes cluster see [Deployment](docs/deployment.md).
 
-To use nfs-provisioner once it is deployed see [Usage](docs/usage.md).
+To use nfs-ganesha-server-and-external-provisioner once it is deployed see [Usage](docs/usage.md).
 
 ## [Changelog](CHANGELOG.md)
-Releases done here in external-storage will not have corresponding git tags (external-storage's git tags are reserved for versioning the library), so to keep track of releases check this README, the [changelog](CHANGELOG.md), or [Quay](https://quay.io/repository/kubernetes_incubator/nfs-provisioner)
+Releases done here in external-storage will not have corresponding git tags (external-storage's git tags are reserved for versioning the library), so to keep track of releases check this README, the [changelog](CHANGELOG.md), or [Quay](https://quay.io/repository/external_storage/nfs-ganesha-server-and-provisioner)
 
 ## Writing your own
 Go [here](https://github.com/kubernetes-sigs/sig-storage-lib-external-provisioner/tree/master/examples/hostpath-provisioner) for an example of how to write your own out-of-tree dynamic provisioner.

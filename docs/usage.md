@@ -1,6 +1,6 @@
 ## Usage
 
-The nfs-provisioner has been deployed and is now watching for claims it should provision volumes for. No such claims can exist until a properly configured `StorageClass` for claims to request is created.
+The nfs-ganesha-server-and-external-provisioner has been deployed and is now watching for claims it should provision volumes for. No such claims can exist until a properly configured `StorageClass` for claims to request is created.
 
 Edit the `provisioner` field in `deploy/kubernetes/class.yaml` to be the provisioner's name. Configure the `parameters`.
 
@@ -25,7 +25,7 @@ $ kubectl create -f deploy/kubernetes/claim.yaml
 persistentvolumeclaim "nfs" created
 ```
 
-The nfs-provisioner provisions a PV for the PVC you just created. Its reclaim policy is Delete, so it and its backing storage will be deleted by the provisioner when the PVC is deleted.
+The nfs-ganesha-server-and-external-provisioner provisions a PV for the PVC you just created. Its reclaim policy is Delete, so it and its backing storage will be deleted by the provisioner when the PVC is deleted.
 
 ```
 $ kubectl get pv

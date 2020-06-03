@@ -13,15 +13,15 @@
 # limitations under the License.
 
 ifeq ($(REGISTRY),)
-	REGISTRY = quay.io/kubernetes_incubator/
+	REGISTRY = quay.io/external_storage/
 endif
 ifeq ($(VERSION),)
 	VERSION = latest
 endif
-IMAGE = $(REGISTRY)nfs-provisioner:$(VERSION)
-IMAGE_ARM = $(REGISTRY)nfs-provisioner-arm:$(VERSION)
-MUTABLE_IMAGE = $(REGISTRY)nfs-provisioner:latest
-MUTABLE_IMAGE_ARM = $(REGISTRY)nfs-provisioner-arm:latest
+IMAGE = $(REGISTRY)nfs-ganesha-server-and-provisioner:$(VERSION)
+IMAGE_ARM = $(REGISTRY)nfs-ganesha-server-and-provisioner-arm:$(VERSION)
+MUTABLE_IMAGE = $(REGISTRY)nfs-ganesha-server-and-provisioner:latest
+MUTABLE_IMAGE_ARM = $(REGISTRY)nfs-ganesha-server-and-provisioner-arm:latest
 
 
 all build: build-x86_64
@@ -82,5 +82,7 @@ test-e2e:
 clean:
 	rm -f nfs-provisioner
 	rm -f deploy/docker/nfs-provisioner
+	rm -f deploy/docker/x86_64/nfs-provisioner
+	rm -f deploy/docker/arm/nfs-provisioner
 	rm -rf test/e2e/vendor
 .PHONY: clean
