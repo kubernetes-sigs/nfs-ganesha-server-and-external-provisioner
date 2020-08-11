@@ -1,7 +1,7 @@
 # Deployment
 
 ## Getting the provisioner image
-To get the Docker image onto the machine where you want to run nfs-provisioner, you can either build it or pull the newest release from Quay. You may use the unstable `latest` tag if you wish, but all the example yamls reference the newest versioned release tag.
+To get the Docker image onto the machine where you want to run `nfs-ganesha-server-and-external-provisioner`, you can either build it or pull the newest release from Quay. You may use the unstable `latest` tag if you wish, but all the example yamls reference the newest versioned release tag.
 
 ### Building
 Building the project will only work if the project is in your `GOPATH`. Download the project into your `GOPATH` directory by using `go get` or cloning it manually.
@@ -14,6 +14,8 @@ Now build the project and the Docker image by checking out the latest release an
 
 ```
 $ cd $GOPATH/src/github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
+# Configure the location where the container image should be pushed. 
+# Example REGISTRY="quay.io/myorg/"
 $ make container
 ```
 
@@ -26,7 +28,7 @@ $ docker pull quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest
 ```
 
 ## Deploying the provisioner
-Now the Docker image is on your machine. Bring up a 1.4+ cluster if you don't have one up already.
+Now the Docker image is on your machine. Bring up a 1.14+ cluster if you don't have one up already.
 
 ```
 $ ALLOW_SECURITY_CONTEXT=true API_HOST_IP=0.0.0.0 $GOPATH/src/k8s.io/kubernetes/hack/local-up-cluster.sh
@@ -42,6 +44,8 @@ Decide how to run nfs-provisioner and follow one of the below sections. The reco
 * [Outside of Kubernetes - binary](#outside-of-kubernetes---binary)
 
 ### In Kubernetes - Deployment of 1 replica
+
+Edit the `image` location in `deploy/kubernetes/deployment.yaml` to the registry location specified while building the container.
 
 Edit the `provisioner` argument in the `args` field in `deploy/kubernetes/deployment.yaml` to be the provisioner's name you decided on.
 
