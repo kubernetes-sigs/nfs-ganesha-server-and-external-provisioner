@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
-FROM arm32v7/ubuntu:19.04
+FROM arm32v7/ubuntu:20.04
 
 RUN apt-get update \
     && apt-get install -y nfs-ganesha nfs-ganesha-vfs dbus-x11 rpcbind hostname libnfs-utils xfsprogs libjemalloc2 libnfsidmap2 \
