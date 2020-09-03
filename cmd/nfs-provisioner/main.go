@@ -45,6 +45,7 @@ var (
 	exportSubnet   = flag.String("export-subnet", "*", "Subnet for NFS export to allow mount only from")
 	maxExports     = flag.Int("max-exports", -1, "The maximum number of volumes to be exported by this provisioner. New claims will be ignored once this limit has been reached. A negative value is interpreted as 'unlimited'. Default -1.")
 	fsidDevice     = flag.Bool("device-based-fsids", true, "If file system handles created by NFS Ganesha should be based on major/minor device IDs of the backing storage volume ('/export'). Default true.")
+	leaderElection = flag.Bool("leader-elect", false, "Start a leader election client and gain leadership before executing the main loop. Enable this when running replicated components for high availability. Default false.")
 )
 
 const (
@@ -138,6 +139,7 @@ func main() {
 		*provisioner,
 		nfsProvisioner,
 		serverVersion.GitVersion,
+		controller.LeaderElection(*leaderElection),
 	)
 
 	pc.Run(wait.NeverStop)
