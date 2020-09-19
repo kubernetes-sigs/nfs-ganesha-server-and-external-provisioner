@@ -51,7 +51,7 @@ $ kubectl create -f deploy/kubernetes/class.yaml
 storageclass "example-nfs" created
 ```
 
-Create a `PersistentVolumeClaim` with annotation `volume.beta.kubernetes.io/storage-class: "example-nfs"`
+Create a `PersistentVolumeClaim` with `storageClassName: example-nfs`.
 ```console
 $ kubectl create -f deploy/kubernetes/claim.yaml
 persistentvolumeclaim "nfs" created
