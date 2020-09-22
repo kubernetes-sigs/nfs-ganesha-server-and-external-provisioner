@@ -18,7 +18,7 @@ storageclass "example-nfs" created
 
 Now if everything is working correctly, when you create a claim requesting the class you just created, the provisioner will automatically create a volume.
 
-Edit the `volume.beta.kubernetes.io/storage-class` annotation in `deploy/kubernetes/claim.yaml` to be the name of the class. Create the claim.
+Edit `storageClassName` in `deploy/kubernetes/claim.yaml` to be the name of the class. Create the claim.
 
 ```
 $ kubectl create -f deploy/kubernetes/claim.yaml
