@@ -1,6 +1,6 @@
 # NFS Server Provisioner
 
-[NFS Server Provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
+[NFS Server Provisioner](https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner)
 is an out-of-tree dynamic provisioner for Kubernetes. You can use it to quickly
 & easily deploy shared storage that works almost anywhere.
 
