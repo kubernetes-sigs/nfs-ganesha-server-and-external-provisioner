@@ -15,6 +15,7 @@ image:
 # Please see https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md#arguments
 extraArgs: {}
   # device-based-fsids: false
+  # grace-period: 0
 
 service:
   type: ClusterIP
