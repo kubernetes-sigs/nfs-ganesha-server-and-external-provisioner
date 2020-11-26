@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "nfs-provisioner.fullname" . }}
+  name: {{ include "nfs-provisioner.fullname" . }}
   labels:
-    app: {{ template "nfs-provisioner.name" . }}
-    chart: {{ template "nfs-provisioner.chart" . }}
+    app: {{ include "nfs-provisioner.name" . }}
+    chart: {{ include "nfs-provisioner.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 spec:
@@ -99,5 +99,5 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   selector:
-    app: {{ template "nfs-provisioner.name" . }}
+    app: {{ include "nfs-provisioner.name" . }}
     release: {{ .Release.Name }}

@@ -22,5 +22,5 @@ correct storageClassName attribute. For example:
 
 {{ else -}}
 A storage class has NOT been created. You may create a custom `StorageClass`
-resource with a `provisioner` attribute of `{{ template "nfs-provisioner.provisionerName" . }}`.
+resource with a `provisioner` attribute of `{{ include "nfs-provisioner.provisionerName" . }}`.
 {{ end -}}
