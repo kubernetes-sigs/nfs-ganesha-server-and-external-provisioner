@@ -1,4 +1,4 @@
-{{ if .Values.storageClass.create -}}
+{{- if .Values.storageClass.create -}}
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
@@ -14,9 +14,9 @@ metadata:
   {{- end }}
 provisioner: {{ template "nfs-provisioner.provisionerName" . }}
 reclaimPolicy: {{ .Values.storageClass.reclaimPolicy }}
-{{ if .Values.storageClass.allowVolumeExpansion }}
+{{- if .Values.storageClass.allowVolumeExpansion }}
 allowVolumeExpansion: {{ .Values.storageClass.allowVolumeExpansion }}
-{{ end }}
+{{- end }}
 {{- with .Values.storageClass.parameters }}
 parameters:
 {{- toYaml . | nindent 2 }}
@@ -25,4 +25,4 @@ parameters:
 mountOptions:
 {{- toYaml . | nindent 2 }}
 {{- end }}
-{{ end -}}
+{{- end }}
