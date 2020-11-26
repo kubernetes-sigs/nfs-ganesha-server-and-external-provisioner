@@ -94,9 +94,9 @@ spec:
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.statdPort))) }}
       nodePort: {{ .Values.service.statdNodePort }}
       {{- end }}
-  {{- if .Values.service.externalIPs }}
+  {{- with .Values.service.externalIPs }}
   externalIPs:
-    {{- toYaml .Values.service.externalIPs | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   selector:
     app: {{ template "nfs-provisioner.name" . }}
