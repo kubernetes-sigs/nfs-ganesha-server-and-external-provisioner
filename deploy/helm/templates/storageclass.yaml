@@ -19,10 +19,10 @@ allowVolumeExpansion: {{ .Values.storageClass.allowVolumeExpansion }}
 {{- end }}
 {{- with .Values.storageClass.parameters }}
 parameters:
-{{- toYaml . | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- with .Values.storageClass.mountOptions }}
 mountOptions:
-{{- toYaml . | nindent 2 }}
+  {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
