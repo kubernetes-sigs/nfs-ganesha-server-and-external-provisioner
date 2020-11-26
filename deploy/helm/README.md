@@ -58,6 +58,7 @@ their default values.
 | `imagePullSecrets`             | Specify image pull secrets                                                                                      | `nil` (does not add image pull secrets to deployed pods) |
 | `image.repository`             | The image repository to pull from                                                                               | `quay.io/kubernetes_incubator/nfs-provisioner`           |
 | `image.tag`                    | The image tag to pull from                                                                                      | `v2.2.2`                                                 |
+| `image.digest`                 | The image digest to pull, this option has precedence over `image.tag`                                           | `nil`                                                    |
 | `image.pullPolicy`             | Image pull policy                                                                                               | `IfNotPresent`                                           |
 | `service.type`                 | service type                                                                                                    | `ClusterIP`                                              |
 | `service.nfsPort`              | TCP port on which the nfs-server-provisioner NFS service is exposed                                                    | `2049`                                                   |

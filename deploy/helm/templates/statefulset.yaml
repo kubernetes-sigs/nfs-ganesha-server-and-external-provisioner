@@ -32,8 +32,10 @@ spec:
       {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- with .Values.image }}
+          image: "{{ .repository }}{{ if .digest }}@{{ .digest }}{{ else }}:{{ .tag }}{{ end }}"
+          imagePullPolicy: {{ .pullPolicy }}
+          {{- end }}
           ports:
             - name: nfs
               containerPort: 2049

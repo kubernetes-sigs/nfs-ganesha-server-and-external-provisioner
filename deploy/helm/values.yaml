@@ -9,6 +9,7 @@ replicaCount: 1
 image:
   repository: quay.io/kubernetes_incubator/nfs-provisioner
   tag: v2.3.0
+  # digest:
   pullPolicy: IfNotPresent
 
 # For a list of available arguments
