@@ -10,8 +10,6 @@ maintainers:
   email: kvapss@gmail.com
 - name: joaocc
   email: joaocc-dev@live.com
-- name: naseemkullah
-  email: naseem@transit.app
 home: https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
 sources:
 - https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/tree/master/deploy/helm
