@@ -27,12 +27,23 @@ import (
 	"sync"
 )
 
+const (
+	// ExportID = 152 is being reserved
+	// so that 152.152 is not used as filesystem_id in nfs-ganesha export configuration
+	// 152.152 is the default pseudo root filesystem ID
+	// Ref: https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/issues/7
+	ReservedExportID = 152
+)
+
 // generateID generates a unique exportID to assign an export
 func generateID(mutex *sync.Mutex, ids map[uint16]bool) uint16 {
 	mutex.Lock()
 	id := uint16(1)
 	for ; id <= math.MaxUint16; id++ {
 		if _, ok := ids[id]; !ok {
+			if id == ReservedExportID {
+				continue
+			}
 			break
 		}
 	}
