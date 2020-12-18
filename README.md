@@ -4,6 +4,17 @@
 
 It works just like in-tree dynamic provisioners: a `StorageClass` object can specify an instance of `nfs-ganesha-server-and-external-provisioner` to be its `provisioner` like it specifies in-tree provisioners such as GCE or AWS. Then, the instance of nfs-ganesha-server-and-external-provisioner will watch for `PersistentVolumeClaims` that ask for the `StorageClass` and automatically create NFS-backed `PersistentVolumes` for them. For more information on how dynamic provisioning works, see [the docs](http://kubernetes.io/docs/user-guide/persistent-volumes/) or [this blog post](http://blog.kubernetes.io/2016/10/dynamic-provisioning-and-storage-in-kubernetes.html).
 
+Note: This repository was migrated from https://github.com/kubernetes-incubator/external-storage/tree/master/nfs. Some of the following instructions will be updated once the build and release automtion is setup. To test container image built from this repository, you will have to build and push the nfs-provisioner image using the following instructions.
+
+```sh
+make build
+make container
+# `nfs-provisioner:latest` will be created. 
+# To upload this to your customer registry, say `quay.io/myorg`, you can use
+# docker tag nfs-provisioner:latest quay.io/myorg/nfs-provisioner:latest
+# docker push quay.io/myorg/nfs-provisioner:latest
+```
+
 ## Quickstart
 
 Choose some volume for your `nfs-ganesha-server-and-external-provisioner` instance to store its state & data in and mount the volume at `/export` in [deploy/kubernetes/deployment.yaml](./deploy/kubernetes/deployment.yaml). It doesn't have to be a `hostPath` volume, it can e.g. be a PVC. Note that the volume must have a [supported file system](https://github.com/nfs-ganesha/nfs-ganesha/wiki/Fsalsupport#vfs) on it: any local filesystem on Linux is supported & NFS is not supported.
