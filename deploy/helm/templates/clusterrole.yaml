@@ -1,11 +1,11 @@
-{{ if .Values.rbac.create -}}
+{{- if .Values.rbac.create -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{ template "nfs-provisioner.fullname" . }}
+  name: {{ include "nfs-provisioner.fullname" . }}
   labels:
-    app: {{ template "nfs-provisioner.name" . }}
-    chart: {{ template "nfs-provisioner.chart" . }}
+    app: {{ include "nfs-provisioner.name" . }}
+    chart: {{ include "nfs-provisioner.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 rules:
@@ -31,4 +31,4 @@ rules:
   - apiGroups: [""]
     resources: ["endpoints"]
     verbs: ["get", "list", "watch", "create", "delete", "update", "patch"]
-{{- end -}}
+{{- end }}
