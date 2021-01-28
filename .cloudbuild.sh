@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # Copyright 2020 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,12 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#! /bin/bash
 
 # At the moment, only amd64 builds are supported by the ./Dockerfile. 
 : ${CSI_PROW_BUILD_PLATFORMS:="linux amd64"}
 
 # shellcheck disable=SC1091
-. release-tools/prow.sh
-
-gcr_cloud_build
+. release-tools/cloudbuild.sh
