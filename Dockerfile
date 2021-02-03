@@ -15,8 +15,6 @@
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
 FROM fedora:30 AS build
 
-ARG binary=./bin/nfs-provisioner
-
 # Build ganesha from source, install it to /usr/local and a use multi stage build to have a smaller image
 # Set NFS_V4_RECOV_ROOT to /export
 
@@ -49,6 +47,8 @@ RUN sed -i s/systemd// /etc/nsswitch.conf
 
 COPY --from=build /usr/local /usr/local/
 COPY --from=build /ganesha-extra /
+
+ARG binary=bin/nfs-provisioner
 COPY ${binary} /nfs-provisioner
 
 # run ldconfig after libs have been copied
