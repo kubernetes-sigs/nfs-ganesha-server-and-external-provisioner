@@ -74,6 +74,11 @@ spec:
               containerPort: 662
               protocol: UDP
           securityContext:
+            {{- range $key, $value := .Values.extraArgs }}
+            {{- if and (eq $key "enable-xfs-quota") $value }}
+            privileged: true
+            {{- end }}
+            {{- end }}
             capabilities:
               add:
                 - DAC_READ_SEARCH
