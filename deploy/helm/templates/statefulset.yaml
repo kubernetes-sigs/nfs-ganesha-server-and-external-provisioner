@@ -102,6 +102,12 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /export
+            {{- range $key, $value := .Values.extraArgs }}
+            {{- if and (eq $key "enable-xfs-quota") $value }}
+            - name: dev-mapper
+              mountPath: /dev/mapper
+            {{- end }}
+            {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
@@ -128,7 +134,15 @@ spec:
         - name: data
           emptyDir: {}
       {{- end }}
-
+      {{- range $key, $value := .Values.extraArgs }}
+      {{- if and (eq $key "enable-xfs-quota") $value }}
+      volumes:
+        - name: dev-mapper
+          hostPath: 
+            path: /dev/mapper
+            type: Directory
+      {{- end }}        
+      {{- end }}
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
