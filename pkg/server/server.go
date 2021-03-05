@@ -91,7 +91,7 @@ func Setup(ganeshaConfig string, gracePeriod uint, fsidDevice bool) error {
 	}
 
 	// Start dbus, needed for ganesha dynamic exports
-	cmd = exec.Command("dbus-daemon", "--system")
+	cmd = exec.Command("dbus-daemon", "--system", "--nopidfile")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("dbus-daemon failed with error: %v, output: %s", err, out)
 	}
