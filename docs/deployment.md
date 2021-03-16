@@ -1,7 +1,7 @@
 # Deployment
 
 ## Getting the provisioner image
-To get the Docker image onto the machine where you want to run `nfs-ganesha-server-and-external-provisioner`, you can either build it or pull the newest release from Quay. You may use the unstable `latest` tag if you wish, but all the example yamls reference the newest versioned release tag.
+To get the Docker image onto the machine where you want to run `nfs-ganesha-server-and-external-provisioner`, you can either build it or pull the newest release from GCR. You may use the unstable `canary` tag if you wish, but all the example yamls reference the newest versioned release tag.
 
 ### Building
 Building the project will only work if the project is in your `GOPATH`. Download the project into your `GOPATH` directory by using `go get` or cloning it manually.
@@ -15,16 +15,16 @@ Now build the project and the Docker image by checking out the latest release an
 ```
 $ cd $GOPATH/src/github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
 # Configure the location where the container image should be pushed. 
-# Example REGISTRY="quay.io/myorg/"
+# Example REGISTRY="gcr.io/myorg/"
 $ make container
 ```
 
 ### Pulling
 
-If you are running in Kubernetes, it will pull the image from Quay for you. Or you can do it yourself.
+If you are running in Kubernetes, it will pull the image from GCR for you. Or you can do it yourself.
 
 ```
-$ docker pull quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest
+$ docker pull gcr.io/k8s-staging-sig-storage/nfs-provisioner:v3.0.0
 ```
 
 ## Deploying the provisioner
@@ -82,7 +82,7 @@ You may want to specify the hostname the NFS server exports from, i.e. the serve
 $ docker run --cap-add DAC_READ_SEARCH --cap-add SYS_RESOURCE \
 --security-opt seccomp:deploy/docker/nfs-provisioner-seccomp.json \
 -v $HOME/.kube:/.kube:Z \
-quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest \
+gcr.io/k8s-staging-sig-storage/nfs-provisioner:v3.0.0 \
 -provisioner=example.com/nfs \
 -kubeconfig=/.kube/config
 ```
@@ -90,7 +90,7 @@ or
 ```
 $ docker run --cap-add DAC_READ_SEARCH --cap-add SYS_RESOURCE \
 --security-opt seccomp:deploy/docker/nfs-provisioner-seccomp.json \
-quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest \
+gcr.io/k8s-staging-sig-storage/nfs-provisioner:v3.0.0 \
 -provisioner=example.com/nfs \
 -master=http://172.17.0.1:8080
 ```
@@ -105,7 +105,7 @@ With the two above options, the run command will look something like this.
 $ docker run --privileged \
 -v $HOME/.kube:/.kube:Z \
 -v /xfs:/export:Z \
-quay.io/external_storage/nfs-ganesha-server-and-provisioner:latest \
+gcr.io/k8s-staging-sig-storage/nfs-provisioner:v3.0.0 \
 -provisioner=example.com/nfs \
 -kubeconfig=/.kube/config \
 -enable-xfs-quota=true
