@@ -10,9 +10,9 @@ Note: This repository was migrated from https://github.com/kubernetes-incubator/
 make build
 make container
 # `nfs-provisioner:latest` will be created. 
-# To upload this to your customer registry, say `quay.io/myorg`, you can use
-# docker tag nfs-provisioner:latest quay.io/myorg/nfs-provisioner:latest
-# docker push quay.io/myorg/nfs-provisioner:latest
+# To upload this to your customer registry, say `gcr.io/myorg`, you can use
+# docker tag nfs-provisioner:latest gcr.io/myorg/nfs-provisioner:latest
+# docker push gcr.io/myorg/nfs-provisioner:latest
 ```
 
 ## Quickstart
@@ -87,7 +87,7 @@ To use `nfs-ganesha-server-and-external-provisioner` once it is deployed see [Us
 
 ## [Changelog](CHANGELOG.md)
 
-Releases done here in external-storage will not have corresponding git tags (external-storage's git tags are reserved for versioning the library), so to keep track of releases check this README, the [changelog](CHANGELOG.md), or [Quay](https://quay.io/repository/external_storage/nfs-ganesha-server-and-provisioner)
+Releases done here in external-storage will not have corresponding git tags (external-storage's git tags are reserved for versioning the library), so to keep track of releases check this README, the [changelog](CHANGELOG.md), or [GCR](https://gcr.io/k8s-staging-sig-storage/nfs-provisioner)
 
 ## Writing your own
 

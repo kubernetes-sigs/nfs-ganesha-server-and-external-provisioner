@@ -18,7 +18,7 @@ all: build
 include release-tools/build.make
 
 ifeq ($(REGISTRY),)
-	REGISTRY = quay.io/external_storage/
+	REGISTRY = gcr.io/k8s-staging-sig-storage/
 endif
 
 ifeq ($(VERSION),)
