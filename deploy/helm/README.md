@@ -12,7 +12,12 @@ instead.
 ## TL;DR;
 
 ```console
-$ helm install stable/nfs-server-provisioner
+# Add helm repository:
+$ helm repo add kvaps https://kvaps.github.io/charts
+# Update repo definition:
+$ helm repo update
+# Install nfs:
+$ helm install kvaps/nfs-server-provisioner
 ```
 
 > **Warning**: While installing in the default configuration will work, any data stored on
@@ -29,7 +34,7 @@ package manager.
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release
+$ helm install kvaps/nfs-server-provisioner --name my-release
 ```
 
 The command deploys nfs-server-provisioner on the Kubernetes cluster in the default
@@ -86,7 +91,7 @@ their default values.
 | `podSecurityContext`              | Security context settings for nfs-server-provisioner pod (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod)                                                        | `{}`                                                     |
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release \
+$ helm install kvaps/nfs-server-provisioner --name my-release \
   --set=image.tag=v1.0.8,resources.limits.cpu=200m
 ```
 
@@ -94,7 +99,7 @@ Alternatively, a YAML file that specifies the values for the above parameters
 can be provided while installing the chart. For example,
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release -f values.yaml
+$ helm install kvaps/nfs-server-provisioner --name my-release -f values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml) as an example
