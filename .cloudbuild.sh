@@ -15,8 +15,8 @@
 # limitations under the License.
 
 
-# At the moment, only amd64 builds are supported by the ./Dockerfile. 
-: ${CSI_PROW_BUILD_PLATFORMS:="linux amd64"}
+# At the moment, only linux builds are supported by the ./Dockerfile. 
+: ${CSI_PROW_BUILD_PLATFORMS:="linux amd64; linux arm64 -arm64"}
 
 # shellcheck disable=SC1091
 . release-tools/cloudbuild.sh
