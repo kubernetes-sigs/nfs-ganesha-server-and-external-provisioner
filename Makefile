@@ -18,7 +18,7 @@ all: build
 include release-tools/build.make
 
 ifeq ($(REGISTRY),)
-	REGISTRY = k8s.gcr.io/sig-storage/
+	REGISTRY = gcr.io/k8s-staging-sig-storage/
 endif
 
 ifeq ($(VERSION),)
