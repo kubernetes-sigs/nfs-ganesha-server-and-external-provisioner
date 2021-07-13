@@ -13,17 +13,38 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
-FROM fedora:30 AS build
+ARG FEDORA_VERSION=34
+
+FROM fedora:${FEDORA_VERSION} AS build
 
 # Build ganesha from source, install it to /usr/local and a use multi stage build to have a smaller image
 # Set NFS_V4_RECOV_ROOT to /export
 
-RUN dnf install -y tar gcc cmake-3.14.2-1.fc30 autoconf libtool bison flex make gcc-c++ krb5-devel dbus-devel jemalloc-devel libnfsidmap-devel libnsl2-devel userspace-rcu-devel patch libblkid-devel
-RUN curl -L https://github.com/nfs-ganesha/nfs-ganesha/archive/V2.8.2.tar.gz | tar zx \
-	  && curl -L https://github.com/nfs-ganesha/ntirpc/archive/v1.8.0.tar.gz | tar zx \
-	  && rm -r nfs-ganesha-2.8.2/src/libntirpc \
-	  && mv ntirpc-1.8.0 nfs-ganesha-2.8.2/src/libntirpc
-WORKDIR /nfs-ganesha-2.8.2
+# Install dependencies on separated lines to be easier to track changes using git blame
+RUN dnf install -y \
+	autoconf \
+	bison \
+	cmake \
+	dbus-devel \
+	flex \
+	tar \
+	gcc \
+	gcc-c++ \
+	git \
+	jemalloc-devel \
+	krb5-devel \
+	libblkid-devel \
+	libnfsidmap-devel \
+	libnsl2-devel \
+	libtool \
+	make \
+	patch \
+	userspace-rcu-devel
+
+# Clone specific version of ganesha
+ARG GANESHA_VERSION=V3.4
+RUN git clone --branch ${GANESHA_VERSION} --recurse-submodules https://github.com/nfs-ganesha/nfs-ganesha
+WORKDIR /nfs-ganesha
 RUN mkdir -p /usr/local \
     && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_CONFIG=vfs_only -DCMAKE_INSTALL_PREFIX=/usr/local src/ \
     && sed -i 's|@SYSSTATEDIR@/lib/nfs/ganesha|/export|' src/include/config-h.in.cmake \
@@ -33,8 +54,20 @@ RUN mkdir -p /ganesha-extra \
     && mkdir -p /ganesha-extra/etc/dbus-1/system.d \
     && cp src/scripts/ganeshactl/org.ganesha.nfsd.conf /ganesha-extra/etc/dbus-1/system.d/
 
-FROM registry.fedoraproject.org/fedora-minimal:30 AS run
-RUN microdnf install -y libblkid userspace-rcu dbus-x11 rpcbind hostname nfs-utils xfsprogs jemalloc libnfsidmap && microdnf clean all
+FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_VERSION} AS run
+
+# Install dependencies on separated lines to be easier to track changes using git blame
+RUN microdnf install -y \
+	dbus-x11 \
+	hostname \
+	jemalloc \
+	libblkid \
+	libnfsidmap \
+	nfs-utils \
+	rpcbind \
+	userspace-rcu \
+	xfsprogs \
+    && microdnf clean all
 
 RUN mkdir -p /var/run/dbus \
     && mkdir -p /export
