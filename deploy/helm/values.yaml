@@ -13,7 +13,7 @@ image:
   pullPolicy: IfNotPresent
 
 # For a list of available arguments
-# Please see https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md#arguments
+# Please see https://github.com/kubernetes-incubator/external-storage/blob/HEAD/nfs/docs/deployment.md#arguments
 extraArgs: {}
   # device-based-fsids: false
   # grace-period: 0

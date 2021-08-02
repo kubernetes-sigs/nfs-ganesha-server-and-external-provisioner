@@ -24,7 +24,7 @@
 - Adds configurable number of retries on failed Provisioner operations. Configurable as an argument to `NewProvisionController`. nfs-provisioner defaults to 10 retries unless the new flag/argument is used. (#65)
 
 # v1.0.2
-- Usage demo & how-to for writing your own external PV provisioner added here https://github.com/kubernetes-incubator/nfs-provisioner/tree/master/demo
+- Usage demo & how-to for writing your own external PV provisioner added here https://github.com/kubernetes-incubator/nfs-provisioner/tree/HEAD/demo
 - Change behaviour for getting NFS server IP from env vars (node, service) in case POD_IP env var is not set when needed. Use `hostname -i` as a fallback only for when running out-of-cluster (#52)
 - Pass whole PVC object from controller to `Provision` as part of `VolumeOptions`, like upstream (#48)
 - Filter out controller's self-generated race-to-lock leader election PVC updates from being seen as forced resync PVC updates (#58) 
