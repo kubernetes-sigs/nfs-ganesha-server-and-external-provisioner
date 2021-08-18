@@ -6,7 +6,7 @@ is an out-of-tree dynamic provisioner for Kubernetes. You can use it to quickly
 
 This chart will deploy the Kubernetes [external-storage projects](https://github.com/kubernetes-incubator/external-storage)
 `nfs` provisioner. This provisioner includes a built in NFS server, and is not intended for connecting to a pre-existing
-NFS server. If you have a pre-existing NFS Server, please consider using the [NFS Client Provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client)
+NFS server. If you have a pre-existing NFS Server, please consider using the [NFS Client Provisioner](https://github.com/kubernetes-incubator/external-storage/tree/HEAD/nfs-client)
 instead.
 
 ## TL;DR;
@@ -20,7 +20,7 @@ the dynamic volumes provisioned by this chart will not be persistent!
 
 ## Introduction
 
-This chart bootstraps a [nfs-server-provisioner](https://github.com/kubernetes-incubator/external-storage/tree/master/nfs)
+This chart bootstraps a [nfs-server-provisioner](https://github.com/kubernetes-incubator/external-storage/tree/HEAD/nfs)
 deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh)
 package manager.
 
@@ -54,7 +54,7 @@ their default values.
 
 | Parameter                      | Description                                                                                                     | Default                                                  |
 |:-------------------------------|:----------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------|
-| `extraArgs` | [Additional command line arguments](https://github.com/kubernetes-incubator/external-storage/blob/master/nfs/docs/deployment.md#arguments) | `{}`
+| `extraArgs` | [Additional command line arguments](https://github.com/kubernetes-incubator/external-storage/blob/HEAD/nfs/docs/deployment.md#arguments) | `{}`
 | `imagePullSecrets`             | Specify image pull secrets                                                                                      | `nil` (does not add image pull secrets to deployed pods) |
 | `image.repository`             | The image repository to pull from                                                                               | `k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0`         |
 | `image.tag`                    | The image tag to pull                                                                                           | `v3.0.0`                                                 |
