@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
-ARG FEDORA_VERSION=34
+ARG FEDORA_VERSION=35
 
 FROM fedora:${FEDORA_VERSION} AS build
 
@@ -42,7 +42,7 @@ RUN dnf install -y \
 	userspace-rcu-devel
 
 # Clone specific version of ganesha
-ARG GANESHA_VERSION=V3.4
+ARG GANESHA_VERSION=V3.5
 RUN git clone --branch ${GANESHA_VERSION} --recurse-submodules https://github.com/nfs-ganesha/nfs-ganesha
 WORKDIR /nfs-ganesha
 RUN mkdir -p /usr/local \
