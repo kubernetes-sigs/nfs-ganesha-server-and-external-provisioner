@@ -95,7 +95,7 @@ RUN sed -i s/systemd// /etc/nsswitch.conf
 COPY --from=build /usr/local /usr/local/
 COPY --from=build /ganesha-extra /
 
-ARG binary=bin/nfs-provisioner
+ARG binary=nfs-provisioner
 COPY ${binary} /nfs-provisioner
 
 # run ldconfig after libs have been copied
