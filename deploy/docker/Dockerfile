@@ -13,9 +13,17 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
+
+# List of Fedora versions: https://en.wikipedia.org/wiki/Fedora_version_history#Version_history
+#
+# WARNING: Fedora version 35 is currently in pre-beta and to be released fully
+#          2021-10-19 but required for arm support. We use
+#          registry.fedoraproject.org to stay better updated as the docker hub
+#          repository lags behind.
+#
 ARG FEDORA_VERSION=35
 
-FROM fedora:${FEDORA_VERSION} AS build
+FROM registry.fedoraproject.org/fedora:${FEDORA_VERSION} AS build
 
 # Build ganesha from source, install it to /usr/local and a use multi stage build to have a smaller image
 # Set NFS_V4_RECOV_ROOT to /export
