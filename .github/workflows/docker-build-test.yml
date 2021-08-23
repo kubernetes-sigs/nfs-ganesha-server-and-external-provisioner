@@ -1,0 +1,48 @@
+# This is a GitHub workflow defining a set of jobs with a set of steps.
+# ref: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
+#
+# This test is meant to verify that our Dockerfile can build successfully when
+# changed on the CPU architectures we have made it support being built on.
+#
+name: Docker build test
+
+on:
+  pull_request:
+    paths:
+      - "deploy/docker/Dockerfile"
+      - ".github/workflows/docker-build-test.yml"
+  push:
+    paths:
+      - "deploy/docker/Dockerfile"
+      - ".github/workflows/docker-build-test.yml"
+  workflow_dispatch:
+
+jobs:
+  build_dockerfile:
+    name: Build Dockerfile for ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Our currently supported architectures
+          - platform: linux/amd64
+          - platform: linux/arm64
+          - platform: linux/arm
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Action reference: https://github.com/docker/setup-qemu-action
+      - name: Set up QEMU (for docker buildx)
+        uses: docker/setup-qemu-action@v1
+
+      # Action reference: https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Provide dummy nfs-provisioner binary in deploy/docker
+        run: touch deploy/docker/nfs-provisioner
+
+      - name: Build Dockerfile for ${{ matrix.platform }}
+        run: docker buildx build --progress=plain --platform=${{ matrix.platform }} deploy/docker
