@@ -16,12 +16,11 @@
 
 # List of Fedora versions: https://en.wikipedia.org/wiki/Fedora_version_history#Version_history
 #
-# WARNING: Fedora version 35 is currently in pre-beta and to be released fully
-#          2021-10-19 but required for arm support. We use
-#          registry.fedoraproject.org to stay better updated as the docker hub
-#          repository lags behind.
+# FIXME: Fedora version 35 is currently in pre-beta and to be released fully
+#        2021-10-19 but required for arm support alongside amd64 and arm64
+#        support.
 #
-ARG FEDORA_VERSION=35
+ARG FEDORA_VERSION=34
 
 FROM registry.fedoraproject.org/fedora:${FEDORA_VERSION} AS build
 
