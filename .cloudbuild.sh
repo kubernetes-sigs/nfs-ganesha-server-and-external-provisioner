@@ -15,7 +15,9 @@
 # limitations under the License.
 
 
-# At the moment, only linux builds are supported by the ./Dockerfile. 
+# FIXME: Enable linux/arm builds when Fedora 35 is released 2021-10-19. See the
+#        Dockerfile for more details.
+# At the moment, only linux builds are supported by the ./Dockerfile.
 : ${CSI_PROW_BUILD_PLATFORMS:="linux amd64; linux arm64 -arm64"}
 
 # shellcheck disable=SC1091

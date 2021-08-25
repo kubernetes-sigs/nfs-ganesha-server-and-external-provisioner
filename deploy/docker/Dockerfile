@@ -18,7 +18,11 @@
 #
 # FIXME: Fedora version 35 is currently in pre-beta and to be released fully
 #        2021-10-19 but required for arm support alongside amd64 and arm64
-#        support.
+#        support. When it is released:
+#
+#        1. Bump this version to 35
+#        2. Enable tests for --platform linux/arm
+#        3. Update /cloudbuild.sh to build linux/arm as well
 #
 ARG FEDORA_VERSION=34
 
