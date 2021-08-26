@@ -5,12 +5,12 @@ name: Chart Lint and Test
 on:
   push:
     paths:
-      - 'deploy/helm/**'
+      - 'charts/nfs-server-provisioner/**'
     branches:
       - master
   pull_request:
     paths:
-      - 'deploy/helm/**'
+      - 'charts/nfs-server-provisioner/**'
     branches:
       - master
 

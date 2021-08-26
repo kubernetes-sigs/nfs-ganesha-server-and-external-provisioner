@@ -12,7 +12,7 @@ maintainers:
   email: joaocc-dev@live.com
 home: https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
 sources:
-- https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/tree/HEAD/deploy/helm
+- https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/tree/HEAD/charts/nfs-server-provisioner
 keywords:
 - nfs
 - storage

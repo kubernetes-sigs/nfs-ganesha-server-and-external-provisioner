@@ -29,7 +29,8 @@ package manager.
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release
+$ helm repo add nfs-ganesha-server-and-external-provisioner https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner/
+$ helm install my-release nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner
 ```
 
 The command deploys nfs-server-provisioner on the Kubernetes cluster in the default
@@ -86,7 +87,7 @@ their default values.
 | `podSecurityContext`              | Security context settings for nfs-server-provisioner pod (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod)                                                        | `{}`                                                     |
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release \
+$ helm install nfs-server-provisioner nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner \
   --set=image.tag=v1.0.8,resources.limits.cpu=200m
 ```
 
@@ -94,7 +95,7 @@ Alternatively, a YAML file that specifies the values for the above parameters
 can be provided while installing the chart. For example,
 
 ```console
-$ helm install stable/nfs-server-provisioner --name my-release -f values.yaml
+$ helm install nfs-server-provisioner nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner -f values.yaml
 ```
 
 > **Tip**: You can use the default [values.yaml](values.yaml) as an example
