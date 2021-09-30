@@ -3,5 +3,5 @@
 remote: origin
 target-branch: master
 chart-dirs:
-  - deploy/helm
+  - charts/nfs-server-provisioner
 helm-extra-args: --timeout=500s
