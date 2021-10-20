@@ -28,9 +28,6 @@ jobs:
           # Our currently supported architectures
           - platform: linux/amd64
           - platform: linux/arm64
-          # FIXME: Enable linux/arm builds when Fedora 35 is released
-          #        2021-10-19. See the Dockerfile for more details.
-          # - platform: linux/arm
 
     steps:
       - uses: actions/checkout@v2

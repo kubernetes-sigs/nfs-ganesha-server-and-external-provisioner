@@ -13,18 +13,14 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
-
+#
+# NOTE: This Dockerfile is maintained to support being built both on amd64 and
+#       arm64 architectures.
+#
 # List of Fedora versions: https://en.wikipedia.org/wiki/Fedora_version_history#Version_history
-#
-# FIXME: Fedora version 35 is currently in pre-beta and to be released fully
-#        2021-10-19 but required for arm support alongside amd64 and arm64
-#        support. When it is released:
-#
-#        1. Bump this version to 35
-#        2. Enable tests for --platform linux/arm
-#        3. Update /cloudbuild.sh to build linux/arm as well
-#
-ARG FEDORA_VERSION=34
+ARG FEDORA_VERSION=35
+
+
 
 FROM registry.fedoraproject.org/fedora:${FEDORA_VERSION} AS build
 
@@ -51,18 +47,6 @@ RUN dnf install -y \
 	make \
 	patch \
 	userspace-rcu-devel
-
-# FIXME: A temporary workaround needed for builds with --platform linux/arm
-#
-#        The workaround makes sure that pkg-config function and can be used to
-#        detect installed packages correctly and avoid the following error.
-#
-#        	/usr/bin/pkg-config: line 8: /usr/bin/armv7hnl-redhat-linux-gnueabi-pkg-config: No such file or directory
-#
-#        The workaround was found at
-#        https://bugzilla.redhat.com/show_bug.cgi?id=1906956
-#
-RUN ln -s /usr/bin/armv7hl-redhat-linux-gnueabi-pkg-config /usr/bin/armv7hnl-redhat-linux-gnueabi-pkg-config
 
 # Clone specific version of ganesha
 ARG GANESHA_VERSION=V3.5
