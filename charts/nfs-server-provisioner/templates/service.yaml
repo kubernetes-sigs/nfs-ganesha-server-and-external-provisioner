@@ -94,6 +94,9 @@ spec:
       {{- if (and (eq .Values.service.type "NodePort") (not (empty .Values.service.statdPort))) }}
       nodePort: {{ .Values.service.statdNodePort }}
       {{- end }}
+  {{- if .Values.service.clusterIP }}
+  clusterIP: {{ .Values.service.clusterIP }}
+  {{- end }}
   {{- with .Values.service.externalIPs }}
   externalIPs:
     {{- toYaml . | nindent 4 }}
