@@ -33,6 +33,7 @@ service:
   # rquotadNodePort:
   # rpcbindNodePort:
   # statdNodePort:
+  # clusterIP:
 
   externalIPs: []
 
