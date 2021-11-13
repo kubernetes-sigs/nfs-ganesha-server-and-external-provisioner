@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-# At the moment, only linux builds are supported by the ./Dockerfile. 
+# At the moment, only linux builds are supported by the ./Dockerfile.
 : ${CSI_PROW_BUILD_PLATFORMS:="linux amd64; linux arm64 -arm64"}
 
 # shellcheck disable=SC1091

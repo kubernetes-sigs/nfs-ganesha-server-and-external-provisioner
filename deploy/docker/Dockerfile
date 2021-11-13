@@ -13,9 +13,16 @@
 # limitations under the License.
 
 # Modified from https://github.com/rootfs/nfs-ganesha-docker by Huamin Chen
+#
+# NOTE: This Dockerfile is maintained to support being built both on amd64 and
+#       arm64 architectures.
+#
+# List of Fedora versions: https://en.wikipedia.org/wiki/Fedora_version_history#Version_history
 ARG FEDORA_VERSION=35
 
-FROM fedora:${FEDORA_VERSION} AS build
+
+
+FROM registry.fedoraproject.org/fedora:${FEDORA_VERSION} AS build
 
 # Build ganesha from source, install it to /usr/local and a use multi stage build to have a smaller image
 # Set NFS_V4_RECOV_ROOT to /export
@@ -54,6 +61,8 @@ RUN mkdir -p /ganesha-extra \
     && mkdir -p /ganesha-extra/etc/dbus-1/system.d \
     && cp src/scripts/ganeshactl/org.ganesha.nfsd.conf /ganesha-extra/etc/dbus-1/system.d/
 
+
+
 FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_VERSION} AS run
 
 # Install dependencies on separated lines to be easier to track changes using git blame
@@ -81,7 +90,7 @@ RUN sed -i s/systemd// /etc/nsswitch.conf
 COPY --from=build /usr/local /usr/local/
 COPY --from=build /ganesha-extra /
 
-ARG binary=bin/nfs-provisioner
+ARG binary=nfs-provisioner
 COPY ${binary} /nfs-provisioner
 
 # run ldconfig after libs have been copied
