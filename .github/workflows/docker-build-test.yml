@@ -28,6 +28,8 @@ jobs:
           # Our currently supported architectures
           - platform: linux/amd64
           - platform: linux/arm64
+          - platform: linux/ppc64le
+          - platform: linux/s390x
 
     steps:
       - uses: actions/checkout@v2
