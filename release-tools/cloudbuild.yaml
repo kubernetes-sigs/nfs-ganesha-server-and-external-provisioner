@@ -16,9 +16,11 @@
 # To promote release images, see https://github.com/kubernetes/k8s.io/tree/HEAD/k8s.gcr.io/images/k8s-staging-sig-storage.
 
 # This must be specified in seconds. If omitted, defaults to 600s (10 mins).
-# Building three images in external-snapshotter takes roughly half an hour,
-# sometimes more.
-timeout: 3600s
+# Building the Dockerfile we maintain for non-amd64 architectures has been found
+# to take ~1 hour, as architecture emulation is slow. Since we may build ~4
+# non-amd64 architectures, six hours is set as a timeout to allow for some
+# margin.
+timeout: 21600s # 6h in seconds
 # This prevents errors if you don't use both _GIT_TAG and _PULL_BASE_REF,
 # or any new substitutions added in the future.
 options:
