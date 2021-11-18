@@ -18,7 +18,7 @@
 # A Prow job can override these defaults, but this shouldn't be necessary.
 
 # At the moment, only linux builds are supported by the ./Dockerfile. 
-: ${CSI_PROW_BUILD_PLATFORMS:="linux amd64; linux arm64 -arm64"}
+: ${CSI_PROW_BUILD_PLATFORMS:="linux amd64; linux arm64 -arm64; linux ppc64le -ppc64le; linux s390x -s390x"}
 
 # Only these tests make sense until we can integrate k/k
 # e2es.
