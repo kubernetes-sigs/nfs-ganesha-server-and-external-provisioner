@@ -29,7 +29,6 @@ FROM registry.fedoraproject.org/fedora:${FEDORA_VERSION} AS build
 
 # Install dependencies on separated lines to be easier to track changes using git blame
 RUN dnf install -y \
-	autoconf \
 	bison \
 	cmake \
 	dbus-devel \
@@ -43,20 +42,25 @@ RUN dnf install -y \
 	libblkid-devel \
 	libnfsidmap-devel \
 	libnsl2-devel \
-	libtool \
-	make \
+	libntirpc-devel \
+	libuuid-devel \
+	ninja-build \
 	patch \
-	userspace-rcu-devel
+	userspace-rcu-devel \
+	xfsprogs-devel
 
 # Clone specific version of ganesha
 ARG GANESHA_VERSION=V3.5
 RUN git clone --branch ${GANESHA_VERSION} --recurse-submodules https://github.com/nfs-ganesha/nfs-ganesha
 WORKDIR /nfs-ganesha
 RUN mkdir -p /usr/local \
-    && cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_CONFIG=vfs_only -DCMAKE_INSTALL_PREFIX=/usr/local src/ \
+    && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DBUILD_CONFIG=vfs_only -DUSE_FSAL_GLUSTER=OFF -DUSE_FSAL_RGW=OFF \
+          -DUSE_RADOS_RECOV=OFF -DRADOS_URLS=OFF -DUSE_SYSTEM_NTIRPC=ON \
+          -G Ninja src/ \
     && sed -i 's|@SYSSTATEDIR@/lib/nfs/ganesha|/export|' src/include/config-h.in.cmake \
-	  && make \
-	  && make install
+	  && ninja \
+	  && ninja install
 RUN mkdir -p /ganesha-extra \
     && mkdir -p /ganesha-extra/etc/dbus-1/system.d \
     && cp src/scripts/ganeshactl/org.ganesha.nfsd.conf /ganesha-extra/etc/dbus-1/system.d/
@@ -72,6 +76,8 @@ RUN microdnf install -y \
 	jemalloc \
 	libblkid \
 	libnfsidmap \
+	libntirpc \
+	libuuid \
 	nfs-utils \
 	rpcbind \
 	userspace-rcu \
