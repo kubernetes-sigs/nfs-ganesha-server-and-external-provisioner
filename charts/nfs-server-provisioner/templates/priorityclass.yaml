@@ -1,0 +1,14 @@
+{{- if .Values.priorityClass.create -}}
+kind: PriorityClass
+apiVersion: scheduling.k8s.io/v1
+metadata:
+  name: {{ .Values.priorityClass.name | default (include "nfs-provisioner.fullname" .) }}
+  labels:
+    app: {{ include "nfs-provisioner.name" . }}
+    chart: {{ include "nfs-provisioner.chart" . }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+value: {{ .Values.priorityClass.value }}
+globalDefault: false
+description: "This priority class should be used for nfs-provisioner pods only."
+{{- end }}
