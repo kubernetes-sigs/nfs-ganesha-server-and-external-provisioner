@@ -84,7 +84,10 @@ their default values.
 | `nodeSelector`                 | Map of node labels for pod assignment                                                                           | `{}`                                                     |
 | `tolerations`                  | List of node taints to tolerate                                                                                 | `[]`                                                     |
 | `affinity`                     | Map of node/pod affinities                                                                                      | `{}`                                                     |
-| `podSecurityContext`              | Security context settings for nfs-server-provisioner pod (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod)                                                        | `{}`                                                     |
+| `podSecurityContext`              | Security context settings for nfs-server-provisioner pod (see https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod)                                                                                                               | `{}`                                                     |
+| `priorityClass.create`         | Enable creation of a PriorityClass resource for this nfs-server-provisioner instance                            | `false`                                                  |
+| `priorityClass.name`           | Set a PriorityClass name to override the default name                                                           | `""`                                                     |
+| `priorityClass.value`          | PriorityClass value. The higher the value, the higher the scheduling priority                                   | `5`                                                      |
 
 ```console
 $ helm install nfs-server-provisioner nfs-ganesha-server-and-external-provisioner/nfs-server-provisioner \

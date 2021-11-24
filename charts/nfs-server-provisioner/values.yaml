@@ -86,6 +86,17 @@ rbac:
   ##
   serviceAccountName: default
 
+## For creating the PriorityClass automatically:
+priorityClass:
+  ## Enable creation of a PriorityClass resource for this nfs-server-provisioner instance
+  create: false
+
+  ## Set a PriorityClass name to override the default name
+  name: ""
+
+  ## PriorityClass value. The higher the value, the higher the scheduling priority
+  value: 5
+
 resources: {}
   # limits:
   #  cpu: 100m
