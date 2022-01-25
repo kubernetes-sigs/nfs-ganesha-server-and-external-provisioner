@@ -469,10 +469,8 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("service %s=%s is valid but it doesn't have a cluster IP", p.serviceEnv, serviceName)
 	}
 
-	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
-	return serviceName + "." + namespace, nil
-
 	// we just go for the namespace name and service name
+	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
 	return serviceName + "." + namespace, nil
 }
 
