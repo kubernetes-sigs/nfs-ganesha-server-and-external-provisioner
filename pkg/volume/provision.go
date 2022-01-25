@@ -371,7 +371,9 @@ func (p *nfsProvisioner) getServer() (string, error) {
 	}
 
     // we want the persistentvolume to connect to the "servicename.namespace" hostname, so that
-    // it will survive any restarts of the pod or node on which the nfs server happens to be running
+    // it will survive any restarts of the service, pod or node on which the nfs server happens 
+    // to be running (in previous versions we returned the service IP here, which was a bit less 
+    // stable in case of changes or to the service)
 	namespace := os.Getenv(p.namespaceEnv)
 	serviceName := os.Getenv(p.serviceEnv)
 
