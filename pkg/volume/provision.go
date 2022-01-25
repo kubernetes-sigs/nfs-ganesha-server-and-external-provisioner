@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -370,56 +370,56 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("hostname -i had bad output %s, no address to use", string(out))
 	}
 
-    // we want the persistentvolume to connect to the "servicename.namespace" hostname, so that
-    // it will survive any restarts of the service, pod or node on which the nfs server happens 
-    // to be running (in previous versions we returned the service IP here, which was a bit less 
-    // stable in case of changes or to the service)
+	// we want the persistentvolume to connect to the "servicename.namespace" hostname, so that
+	// it will survive any restarts of the service, pod or node on which the nfs server happens 
+	// to be running (in previous versions we returned the service IP here, which was a bit less 
+	// stable in case of changes or to the service)
 	namespace := os.Getenv(p.namespaceEnv)
 	serviceName := os.Getenv(p.serviceEnv)
 
-    // we already fetch the podIp because we need it a number of times
-    podIP := os.Getenv(p.podIPEnv)
+	// we already fetch the podIp because we need it a number of times
+	podIP := os.Getenv(p.podIPEnv)
 
-    // In the unlikely case that we do not have a namespace or servicename, we will try some alternatives
-    // so that we have _at least_ a volume that we can offer to the caller (although not a very stable one)
-    // TODO Is it clever to use these alternatives in the first place instead of just crashing? Handing
-    //      out such an unstable server name is a bit like waiting for a future disaster that will hit somebody
-    //      when nobody is around to solve it.   
-    if (namespace == "" || serviceName == "") {
+	// In the unlikely case that we do not have a namespace or servicename, we will try some alternatives
+	// so that we have _at least_ a volume that we can offer to the caller (although not a very stable one)
+	// TODO Is it clever to use these alternatives in the first place instead of just crashing? Handing
+	//      out such an unstable server name is a bit like waiting for a future disaster that will hit somebody
+	//      when nobody is around to solve it.   
+	if (namespace == "" || serviceName == "") {
 
-        // report a warning
+		// report a warning
 		glog.Infof("using potentially unstable server address (because namespace env %s and/or service env %s are not set)", p.namespaceEnv, p.serviceEnv)
-        
-        // alternative 1: we use the name of the node, naively hoping that the node never dies
-        nodeName := os.Getenv(p.nodeEnv)
-        if nodeName != "" {
-            glog.Infof("using node name %s=%s as dangerous NFS server IP", p.nodeEnv, nodeName)
-            return nodeName, nil
-        }
-        
-        // alternative 2: we use the ip address of the pod, naively hoping that pods never crash or restart
-        if podIP != "" {
-            glog.Infof("using pod IP %s=%s as dangerous NFS server IP", p.podIPEnv, podIP)
-            return podIP, nil;
-        }
-        
-        // we're out of alternatives, report an error
-        return "", fmt.Errorf("no alternatives found for the NFS server address (node env %s and pod env %s not set)", p.nodeEnv, p.podIPEnv)
-    }
+		
+		// alternative 1: we use the name of the node, naively hoping that the node never dies
+		nodeName := os.Getenv(p.nodeEnv)
+		if nodeName != "" {
+			glog.Infof("using node name %s=%s as dangerous NFS server IP", p.nodeEnv, nodeName)
+			return nodeName, nil
+		}
+		
+		// alternative 2: we use the ip address of the pod, naively hoping that pods never crash or restart
+		if podIP != "" {
+			glog.Infof("using pod IP %s=%s as dangerous NFS server IP", p.podIPEnv, podIP)
+			return podIP, nil;
+		}
+		
+		// we're out of alternatives, report an error
+		return "", fmt.Errorf("no alternatives found for the NFS server address (node env %s and pod env %s not set)", p.nodeEnv, p.podIPEnv)
+	}
 
-    // check if the service does actually exist
+	// check if the service does actually exist
 	service, err := p.client.CoreV1().Services(namespace).Get(serviceName, metav1.GetOptions{})
 	if err != nil {
 		return "", fmt.Errorf("error getting service %s=%s in namespace %s=%s", p.serviceEnv, serviceName, p.namespaceEnv, namespace)
 	}
-    
+	
 	// We are almost ready to use the "servicename.namespace" name, but we first do some validation of the 
-    // service before provisioning a potential useless volume
-    // TODO Does this validation actually belong here? One could argue that it is not our (single) responsibility 
-    //      to check the service for correctness, and that the whole idea of having services is that you can rely 
-    //      on them, without having to worry about their implementation or configuration. By having this check 
-    //      here, the provisioner is now suddenly also supposed to be a NFS specialist, breaking the single
-    //      responsibility principle. Future (valid) changes to the NFS protocol or service now break the provisioner!
+	// service before provisioning a potential useless volume
+	// TODO Does this validation actually belong here? One could argue that it is not our (single) responsibility 
+	//      to check the service for correctness, and that the whole idea of having services is that you can rely 
+	//      on them, without having to worry about their implementation or configuration. By having this check 
+	//      here, the provisioner is now suddenly also supposed to be a NFS specialist, breaking the single
+	//      responsibility principle. Future (valid) changes to the NFS protocol or service now break the provisioner!
 	valid := false
 	type endpointPort struct {
 		port     int32
@@ -472,8 +472,8 @@ func (p *nfsProvisioner) getServer() (string, error) {
 	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
 	return serviceName + "." + namespace, nil
 
-    // we just go for the namespace name and service name
-    return serviceName + "." + namespace, nil
+	// we just go for the namespace name and service name
+	return serviceName + "." + namespace, nil
 }
 
 func (p *nfsProvisioner) checkExportLimit() bool {
