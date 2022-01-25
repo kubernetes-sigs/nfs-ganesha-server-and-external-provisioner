@@ -370,34 +370,54 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("hostname -i had bad output %s, no address to use", string(out))
 	}
 
-	nodeName := os.Getenv(p.nodeEnv)
-	if nodeName != "" {
-		glog.Infof("using node name %s=%s as NFS server IP", p.nodeEnv, nodeName)
-		return nodeName, nil
-	}
-
-	podIP := os.Getenv(p.podIPEnv)
-	if podIP == "" {
-		return "", fmt.Errorf("pod IP env %s must be set even if intent is to use service cluster IP as NFS server IP", p.podIPEnv)
-	}
-
-	serviceName := os.Getenv(p.serviceEnv)
-	if serviceName == "" {
-		glog.Infof("using potentially unstable pod IP %s=%s as NFS server IP (because neither service env %s nor node env %s are set)", p.podIPEnv, podIP, p.serviceEnv, p.nodeEnv)
-		return podIP, nil
-	}
-
-	// Service env was set, now find and validate it
+    // we want the persistentvolume to connect to the "servicename.namespace" hostname, so that
+    // it will survive any restarts of the pod or node on which the nfs server happens to be running
 	namespace := os.Getenv(p.namespaceEnv)
-	if namespace == "" {
-		return "", fmt.Errorf("service env %s is set but namespace env %s isn't; no way to get the service cluster IP", p.serviceEnv, p.namespaceEnv)
-	}
+	serviceName := os.Getenv(p.serviceEnv)
+
+    // we already fetch the podIp because we need it a number of times
+    podIP := os.Getenv(p.podIPEnv)
+
+    // In the unlikely case that we do not have a namespace or servicename, we will try some alternatives
+    // so that we have _at least_ a volume that we can offer to the caller (although not a very stable one)
+    // TODO Is it clever to use these alternatives in the first place instead of just crashing? Handing
+    //      out such an unstable server name is a bit like waiting for a future disaster that will hit somebody
+    //      when nobody is around to solve it.   
+    if (namespace == "" || serviceName == "") {
+
+        // report a warning
+		glog.Infof("using potentially unstable server address (because namespace env %s and/or service env %s are not set)", p.namespaceEnv, p.serviceEnv)
+        
+        // alternative 1: we use the name of the node, naively hoping that the node never dies
+        nodeName := os.Getenv(p.nodeEnv)
+        if nodeName != "" {
+            glog.Infof("using node name %s=%s as dangerous NFS server IP", p.nodeEnv, nodeName)
+            return nodeName, nil
+        }
+        
+        // alternative 2: we use the ip address of the pod, naively hoping that pods never crash or restart
+        if podIP != "" {
+            glog.Infof("using pod IP %s=%s as dangerous NFS server IP", p.podIPEnv, podIP)
+            return podIP, nil;
+        }
+        
+        // we're out of alternatives, report an error
+        return "", fmt.Errorf("no alternatives found for the NFS server address (node env %s and pod env %s not set)", p.nodeEnv, p.podIPEnv)
+    }
+
+    // check if the service does actually exist
 	service, err := p.client.CoreV1().Services(namespace).Get(serviceName, metav1.GetOptions{})
 	if err != nil {
 		return "", fmt.Errorf("error getting service %s=%s in namespace %s=%s", p.serviceEnv, serviceName, p.namespaceEnv, namespace)
 	}
-
-	// Do some validation of the service before provisioning useless volumes
+    
+	// We are almost ready to use the "servicename.namespace" name, but we first do some validation of the 
+    // service before provisioning a potential useless volume
+    // TODO Does this validation actually belong here? One could argue that it is not our (single) responsibility 
+    //      to check the service for correctness, and that the whole idea of having services is that you can rely 
+    //      on them, without having to worry about their implementation or configuration. By having this check 
+    //      here, the provisioner is now suddenly also supposed to be a NFS specialist, breaking the single
+    //      responsibility principle. Future (valid) changes to the NFS protocol or service now break the provisioner!
 	valid := false
 	type endpointPort struct {
 		port     int32
@@ -447,8 +467,11 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("service %s=%s is valid but it doesn't have a cluster IP", p.serviceEnv, serviceName)
 	}
 
-	glog.Infof("using service %s=%s cluster IP %s as NFS server IP", p.serviceEnv, serviceName, service.Spec.ClusterIP)
-	return service.Spec.ClusterIP, nil
+	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
+	return serviceName + "." + namespace, nil
+
+    // we just go for the namespace name and service name
+    return serviceName + "." + namespace, nil
 }
 
 func (p *nfsProvisioner) checkExportLimit() bool {
