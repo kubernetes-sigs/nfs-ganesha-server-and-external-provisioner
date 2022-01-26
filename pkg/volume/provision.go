@@ -471,7 +471,7 @@ func (p *nfsProvisioner) getServer() (string, error) {
 
 	// we just go for the namespace name and service name
 	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
-	return serviceName + "." + namespace, nil
+	return serviceName + "." + namespace + ".svc.cluster.local", nil
 }
 
 func (p *nfsProvisioner) checkExportLimit() bool {
