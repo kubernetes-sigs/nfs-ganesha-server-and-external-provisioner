@@ -354,10 +354,16 @@ func (p *nfsProvisioner) validateOptions(options controller.ProvisionOptions) (s
 
 // getServer gets the server IP to put in a provisioned PV's spec.
 func (p *nfsProvisioner) getServer() (string, error) {
+    
+    // if the user supplied a hardcoded server name as command line argument, we always use that,
+    // this is useful when the provisioner is running out of the cluster AND when the user knows
+    // better which DNS to use (for example in case they run a non-standard DNS service on the nodes
+    // that allows them to find service IP's based on DNS names)
+    if (p.serverHostname != "") {
+        return p.serverHostname, nil
+    }
+    
 	if p.outOfCluster {
-		if p.serverHostname != "" {
-			return p.serverHostname, nil
-		}
 		// TODO make this better
 		out, err := exec.Command("hostname", "-i").Output()
 		if err != nil {
@@ -413,8 +419,8 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("error getting service %s=%s in namespace %s=%s", p.serviceEnv, serviceName, p.namespaceEnv, namespace)
 	}
 	
-	// We are almost ready to use the "servicename.namespace" name, but we first do some validation of the 
-	// service before provisioning a potential useless volume
+	// We are almost ready to use the "clientIP" or "servicename.namespace" name, but we first do some validation 
+    // of the service before provisioning a potential useless volume
 	// TODO Does this validation actually belong here? One could argue that it is not our (single) responsibility 
 	//      to check the service for correctness, and that the whole idea of having services is that you can rely 
 	//      on them, without having to worry about their implementation or configuration. By having this check 
@@ -469,9 +475,24 @@ func (p *nfsProvisioner) getServer() (string, error) {
 		return "", fmt.Errorf("service %s=%s is valid but it doesn't have a cluster IP", p.serviceEnv, serviceName)
 	}
 
-	// we just go for the namespace name and service name
-	glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
-	return serviceName + "." + namespace + ".svc.cluster.local", nil
+    // do the nodes support "cluster.local" internal DNS names?
+    // TODO maybe we can auto-detect this, or make this user-configurable?
+    nodes_support_cluster_local := false
+
+    // in a perfect world we would like to hand out a "service.namespace.svc.cluster.local" address,
+    // because then the NFS mount point will also work in case of a disaster (service is recreated
+    // with a new IP). However, because the "mount -t nfs" command is given on the nodes and not 
+    // inside Kubernetes, such DNS names do not exist on normally configured clusters.
+    if nodes_support_cluster_local {
+	    // we go for the namespace name and service name, and rely on the node to find the IP address
+	    glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
+	    return serviceName + "." + namespace + ".svc.cluster.local", nil
+    } else {
+        // the nodes do not support internal DNS names, so we have to hand out an IP address anyway
+        // (users better put hardcoded IPs in their service definition to survive service-recreation)
+	    glog.Infof("using service %s=%s clusterIP %s as NFS server IP", p.serviceEnv, serviceName, service.Spec.ClusterIP)
+        return service.Spec.ClusterIP, nil
+    }
 }
 
 func (p *nfsProvisioner) checkExportLimit() bool {

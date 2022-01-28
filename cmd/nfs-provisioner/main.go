@@ -41,7 +41,7 @@ var (
 	useGanesha     = flag.Bool("use-ganesha", true, "If the provisioner will create volumes using NFS Ganesha (D-Bus method calls) as opposed to using the kernel NFS server ('exportfs'). If run-server is true, this must be true. Default true.")
 	gracePeriod    = flag.Uint("grace-period", 90, "NFS Ganesha grace period to use in seconds, from 0-180. If the server is not expected to survive restarts, i.e. it is running as a pod & its export directory is not persisted, this can be set to 0. Can only be set if both run-server and use-ganesha are true. Default 90.")
 	enableXfsQuota = flag.Bool("enable-xfs-quota", false, "If the provisioner will set xfs quotas for each volume it provisions. Requires that the directory it creates volumes in ('/export') is xfs mounted with option prjquota/pquota, and that it has the privilege to run xfs_quota. Default false.")
-	serverHostname = flag.String("server-hostname", "", "The hostname for the NFS server to export from. Only applicable when running out-of-cluster i.e. it can only be set if either master or kubeconfig are set. If unset, the first IP output by `hostname -i` is used.")
+	serverHostname = flag.String("server-hostname", "", "The hostname for the NFS server to export from. If unset and running out-of-cluster, the first IP output by `hostname -i` is used.")
 	exportSubnet   = flag.String("export-subnet", "*", "Subnet for NFS export to allow mount only from")
 	maxExports     = flag.Int("max-exports", -1, "The maximum number of volumes to be exported by this provisioner. New claims will be ignored once this limit has been reached. A negative value is interpreted as 'unlimited'. Default -1.")
 	fsidDevice     = flag.Bool("device-based-fsids", true, "If file system handles created by NFS Ganesha should be based on major/minor device IDs of the backing storage volume ('/export'). Default true.")
@@ -80,10 +80,6 @@ func main() {
 
 	// Create the client according to whether we are running in or out-of-cluster
 	outOfCluster := *master != "" || *kubeconfig != ""
-
-	if !outOfCluster && *serverHostname != "" {
-		glog.Fatalf("Invalid flags specified: if server-hostname is set, either master or kube-config must also be set.")
-	}
 
 	if *runServer {
 		glog.Infof("Setting up NFS server!")
