@@ -120,4 +120,4 @@ spec:
       volumes:
         - name: export-volume
           hostPath:
-            path: /srv
+            path: /mnt/nas

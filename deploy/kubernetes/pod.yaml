@@ -58,7 +58,8 @@ spec:
       imagePullPolicy: "IfNotPresent"
       volumeMounts:
         - name: export-volume
-          mountPath: /export
+          HostPath: 
+            path: /mnt/nas
   volumes:
     - name: export-volume
       emptyDir: {}

@@ -38,7 +38,7 @@ service:
   externalIPs: []
 
 persistence:
-  enabled: false
+  enabled: enable
 
   ## Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -61,7 +61,7 @@ storageClass:
 
   ## Set StorageClass as the default StorageClass
   ## Ignored if storageClass.create is false
-  defaultClass: false
+  defaultClass: true
 
   ## Set a StorageClass name
   ## Ignored if storageClass.create is false
@@ -76,7 +76,7 @@ storageClass:
     - vers=3
 
   ## ReclaimPolicy field of the class, which can be either Delete or Retain
-  reclaimPolicy: Delete
+  reclaimPolicy: Retain
 
 ## For RBAC support:
 rbac:
@@ -89,7 +89,7 @@ rbac:
 ## For creating the PriorityClass automatically:
 priorityClass:
   ## Enable creation of a PriorityClass resource for this nfs-server-provisioner instance
-  create: false
+  create: true
 
   ## Set a PriorityClass name to override the default name
   name: ""
@@ -105,7 +105,7 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
-nodeSelector: {}
+nodeSelector: {hellbox}
 
 tolerations: []
 
