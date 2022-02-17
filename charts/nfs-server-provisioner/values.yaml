@@ -105,8 +105,16 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 
-nodeSelector: {hellbox}
+nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - hellbox 
