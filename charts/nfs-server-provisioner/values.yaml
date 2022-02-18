@@ -107,14 +107,8 @@ resources: {}
 
 nodeSelector: {}
 
-tolerations: []
-
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - hellbox 
+tolerations:
+  -key: kubernetes.io/arch
+   operator: "equal"
+   value: "amd64"
+   effect: "NoSchedule"
