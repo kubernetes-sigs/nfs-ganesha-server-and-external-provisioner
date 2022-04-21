@@ -1,0 +1,6 @@
+storageClass:
+  annotations:
+    foo: bar
+    some: other
+    
+  defaultClass: true
