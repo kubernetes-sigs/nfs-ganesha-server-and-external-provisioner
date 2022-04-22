@@ -37,6 +37,13 @@ service:
 
   externalIPs: []
 
+# Statefulset annotations
+annotations: {}
+
+# Pod annotations
+podAnnotations: {}
+
+
 persistence:
   enabled: false
 
@@ -55,6 +62,9 @@ persistence:
 ## For creating the StorageClass automatically:
 storageClass:
   create: true
+
+  # Additional storageclass annotations
+  annotations: {}
 
   ## Set a provisioner name. If unset, a name will be generated.
   # provisionerName:

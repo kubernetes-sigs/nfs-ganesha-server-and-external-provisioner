@@ -7,6 +7,10 @@ metadata:
     chart: {{ include "nfs-provisioner.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
+  {{- with .Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   # TODO: Investigate how/if nfs-provisioner can be scaled out beyond 1 replica
   replicas: {{ .Values.replicaCount }}
@@ -22,6 +26,10 @@ spec:
         chart: {{ include "nfs-provisioner.chart" . }}
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       # NOTE: This is 10 seconds longer than the default nfs-provisioner --grace-period value of 90sec
       terminationGracePeriodSeconds: 100

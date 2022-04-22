@@ -1,0 +1,12 @@
+storageClass:
+  annotations:
+    foo: bar
+    some: other
+
+  defaultClass: true
+
+annotations:
+  myannotation: abc
+
+podAnnotations:
+  mypodannotation: xyz
