@@ -56,9 +56,6 @@ persistence:
 storageClass:
   create: true
 
-  # Additional storageclass annotations
-  annotations: {}
-
   ## Set a provisioner name. If unset, a name will be generated.
   # provisionerName:
 

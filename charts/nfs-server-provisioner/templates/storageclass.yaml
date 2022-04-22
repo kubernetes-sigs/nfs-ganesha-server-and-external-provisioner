@@ -8,14 +8,9 @@ metadata:
     chart: {{ include "nfs-provisioner.chart" . }}
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-  {{- if or .Values.storageClass.annotations .Values.storageClass.defaultClass }}
+  {{- if .Values.storageClass.defaultClass }}
   annotations:
-    {{- with .Values.storageClass.annotations }}
-    {{- toYaml . | nindent 4 }}
-    {{- end }}
-    {{- if .Values.storageClass.defaultClass }}
     storageclass.kubernetes.io/is-default-class: "true"
-    {{- end }}
   {{- end }}
 provisioner: {{ include "nfs-provisioner.provisionerName" . }}
 reclaimPolicy: {{ .Values.storageClass.reclaimPolicy }}
