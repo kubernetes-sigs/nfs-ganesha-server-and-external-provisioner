@@ -74,6 +74,8 @@ storageClass:
 
   mountOptions:
     - vers=3
+    - retrans=2
+    - timeo=30
 
   ## ReclaimPolicy field of the class, which can be either Delete or Retain
   reclaimPolicy: Delete
