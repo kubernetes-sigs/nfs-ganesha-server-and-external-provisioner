@@ -485,8 +485,11 @@ func (p *nfsProvisioner) getServer() (string, error) {
 	// inside Kubernetes, such DNS names do not exist on normally configured clusters.
 	if nodes_support_cluster_local {
 		// we go for the namespace name and service name, and rely on the node to find the IP address
+        // (it is debatable whether we should use the FWDN "name.ns.svc.cluster.local" or rely on the 
+        // node to have a search path that contain "cluster.local" or "svc.cluster.local" (which is 
+        // often the case). In our case we rely on the search path to contain 'cluster.local')
 		glog.Infof("using service %s=%s hostname %s.%s as NFS server IP", p.serviceEnv, serviceName, serviceName, namespace)
-		return serviceName + "." + namespace + ".svc.cluster.local", nil
+		return serviceName + "." + namespace + ".svc", nil
 	} else {
 		// the nodes do not support internal DNS names, so we have to hand out an IP address anyway
 		// (users better put hardcoded IPs in their service definition to survive service-recreation)
