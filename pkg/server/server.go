@@ -39,24 +39,22 @@ var defaultGaneshaConfigContents = []byte(`
 #
 ###################################################
 
-EXPORT
-{
+EXPORT {
+
 	# Export Id (mandatory, each EXPORT must have a unique Export_Id)
 	Export_Id = 0;
-
 	# Exported path (mandatory)
-	Path = /nonexistent;
-
+	Path = /;
 	# Pseudo Path (required for NFS v4)
-	Pseudo = /nonexistent;
+	Pseudo = /;
+	Protocols = 4;
+	Access_Type = MDONLY_RO;
+	Filesystem_Id = 152.152;
 
-	# Required for access (default is None)
-	# Could use CLIENT blocks instead
-	Access_Type = RW;
-
-	# Exporting FSAL
 	FSAL {
-		Name = VFS;
+
+		Name = PSEUDO;
+
 	}
 }
 
