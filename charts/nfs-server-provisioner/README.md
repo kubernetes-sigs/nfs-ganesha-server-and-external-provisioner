@@ -57,8 +57,8 @@ their default values.
 |:-------------------------------|:----------------------------------------------------------------------------------------------------------------|:---------------------------------------------------------|
 | `extraArgs` | [Additional command line arguments](https://github.com/kubernetes-incubator/external-storage/blob/HEAD/nfs/docs/deployment.md#arguments) | `{}`
 | `imagePullSecrets`             | Specify image pull secrets                                                                                      | `nil` (does not add image pull secrets to deployed pods) |
-| `image.repository`             | The image repository to pull from                                                                               | `k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0`         |
-| `image.tag`                    | The image tag to pull                                                                                           | `v3.0.0`                                                 |
+| `image.repository`             | The image repository to pull from                                                                               | `k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.0`         |
+| `image.tag`                    | The image tag to pull                                                                                           | `v4.0.0`                                                 |
 | `image.digest`                 | The image digest to pull, this option has precedence over `image.tag`                                           | `nil`                                                    |
 | `image.pullPolicy`             | Image pull policy                                                                                               | `IfNotPresent`                                           |
 | `service.type`                 | service type                                                                                                    | `ClusterIP`                                              |

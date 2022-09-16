@@ -1,3 +1,8 @@
+# v1.5.0
+- Rebase on Fedora 36
+- Upgrade Ganesha to 4.0.8
+- Switch to new repo for dbus
+
 # v1.0.8
 - Add mountOptions StorageClass parameter (#84) (see [Usage](./docs/usage.md) for complete SC parameter info)
 - Replace root-squash argument with a rootSquash SC parameter (#86) (see [Usage](./docs/usage.md) for complete SC parameter info)

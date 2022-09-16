@@ -63,7 +63,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: nfs-provisioner
-          image: k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
+          image: k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.0
           ports:
             - name: nfs
               containerPort: 2049
