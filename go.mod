@@ -4,7 +4,7 @@ go 1.12
 
 require (
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
-	github.com/guelfey/go.dbus v0.0.0-20131113121618-f6a3a2366cc3
+	github.com/godbus/dbus v4.1.0+incompatible
 	github.com/imdario/mergo v0.3.7 // indirect
 	github.com/kubernetes-sigs/sig-storage-lib-external-provisioner v4.0.0+incompatible
 	github.com/miekg/dns v1.1.15 // indirect
