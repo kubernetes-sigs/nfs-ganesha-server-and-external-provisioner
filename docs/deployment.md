@@ -1,5 +1,10 @@
 # Deployment
 
+## Via Helm
+
+The easiest way to deploy this tool is via its Helm chart.
+See [chart documentation](../charts/nfs-server-provisioner/README.md) for details.
+
 ## Getting the provisioner image
 To get the Docker image onto the machine where you want to run `nfs-ganesha-server-and-external-provisioner`, you can either build it or pull the newest release from GCR. You may use the unstable `canary` tag if you wish, but all the example yamls reference the newest versioned release tag.
 
