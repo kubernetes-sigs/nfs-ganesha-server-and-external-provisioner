@@ -3,6 +3,28 @@ entries:
   nfs-server-provisioner:
   - apiVersion: v1
     appVersion: 3.0.0
+    created: "2023-01-04T08:36:17.302679509Z"
+    description: nfs-server-provisioner is an out-of-tree dynamic provisioner for Kubernetes. You can use it to quickly & easily deploy shared storage that works almost anywhere.
+    digest: 73ac6bf20b6e257d041f84b06da383e077299b9f9acf904a77fde8ccac217105
+    home: https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner
+    keywords:
+    - nfs
+    - storage
+    maintainers:
+    - email: kiall@macinnes.ie
+      name: kiall
+    - email: kvapss@gmail.com
+      name: kvaps
+    - email: joaocc-dev@live.com
+      name: joaocc
+    name: nfs-server-provisioner
+    sources:
+    - https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/tree/HEAD/charts/nfs-server-provisioner
+    urls:
+    - https://github.com/kubernetes-sigs/nfs-ganesha-server-and-external-provisioner/releases/download/nfs-server-provisioner-1.5.0/nfs-server-provisioner-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v1
+    appVersion: 3.0.0
     created: "2021-11-24T22:11:50.288784617Z"
     description: nfs-server-provisioner is an out-of-tree dynamic provisioner for Kubernetes. You can use it to quickly & easily deploy shared storage that works almost anywhere.
     digest: a256b625c8dd44fc8a2ce7ada08933d9ec36450b94dad19dc26da5de9975d139
