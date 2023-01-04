@@ -72,6 +72,7 @@ their default values.
 | `persistence.storageClass`     | PVC Storage Class for config volume                                                                             | `nil`                                                    |
 | `persistence.accessMode`       | PVC Access Mode for config volume                                                                               | `ReadWriteOnce`                                          |
 | `persistence.size`             | PVC Storage Request for config volume                                                                           | `1Gi`                                                    |
+| `persistence.existingClaim`    | Use an existing Persistent Volume Claim for persistence                                                        | `nil`                                                    |
 | `storageClass.create`          | Enable creation of a StorageClass to consume this nfs-server-provisioner instance                                      | `true`                                                   |
 | `storageClass.provisionerName` | The provisioner name for the storageclass                                                                       | `cluster.local/{release-name}-{chart-name}`              |
 | `storageClass.defaultClass`    | Whether to set the created StorageClass as the clusters default StorageClass                                    | `false`                                                  |

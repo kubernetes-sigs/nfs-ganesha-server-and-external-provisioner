@@ -39,6 +39,14 @@ service:
 
 persistence:
   enabled: false
+  
+  ## Existing Persistent Volume Claim
+  ## This should be used with persistence.enabled=true
+  ## If defined, an existing volume claim will be used, instead
+  ## of creating a new one. i.e. volume definition:
+  ## persistentVolumeClaim:
+  ##   claimName: {{ tpl .Values.persistence.existingClaim . }}
+  # existingClaim: "my-existing-pvc"
 
   ## Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
