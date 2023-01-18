@@ -1,4 +1,4 @@
-# v1.5.0
+# v1.6.0
 - Rebase on Fedora 36
 - Upgrade Ganesha to 4.0.8
 - Switch to new repo for dbus
