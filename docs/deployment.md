@@ -29,7 +29,7 @@ $ make container
 If you are running in Kubernetes, it will pull the image from GCR for you. Or you can do it yourself.
 
 ```
-$ docker pull k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0
+$ docker pull k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8
 ```
 
 ## Deploying the provisioner
@@ -87,7 +87,7 @@ You may want to specify the hostname the NFS server exports from, i.e. the serve
 $ docker run --cap-add DAC_READ_SEARCH --cap-add SYS_RESOURCE \
 --security-opt seccomp:deploy/docker/nfs-provisioner-seccomp.json \
 -v $HOME/.kube:/.kube:Z \
-k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0 \
+k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8 \
 -provisioner=example.com/nfs \
 -kubeconfig=/.kube/config
 ```
@@ -95,7 +95,7 @@ or
 ```
 $ docker run --cap-add DAC_READ_SEARCH --cap-add SYS_RESOURCE \
 --security-opt seccomp:deploy/docker/nfs-provisioner-seccomp.json \
-k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0 \
+k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8 \
 -provisioner=example.com/nfs \
 -master=http://172.17.0.1:8080
 ```
@@ -110,7 +110,7 @@ With the two above options, the run command will look something like this.
 $ docker run --privileged \
 -v $HOME/.kube:/.kube:Z \
 -v /xfs:/export:Z \
-k8s.gcr.io/sig-storage/nfs-provisioner:v3.0.0 \
+k8s.gcr.io/sig-storage/nfs-provisioner:v4.0.8 \
 -provisioner=example.com/nfs \
 -kubeconfig=/.kube/config \
 -enable-xfs-quota=true

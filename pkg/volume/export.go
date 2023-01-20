@@ -25,7 +25,7 @@ import (
 	"sync"
 
 	"github.com/golang/glog"
-	"github.com/guelfey/go.dbus"
+	"github.com/godbus/dbus"
 	"k8s.io/api/core/v1"
 )
 
