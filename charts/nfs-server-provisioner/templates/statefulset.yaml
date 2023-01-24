@@ -73,11 +73,10 @@ spec:
             - name: statd-udp
               containerPort: 662
               protocol: UDP
+          {{- with .Values.securityContext }}
           securityContext:
-            capabilities:
-              add:
-                - DAC_READ_SEARCH
-                - SYS_RESOURCE
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           args:
             - "-provisioner={{ include "nfs-provisioner.provisionerName" . }}"
             {{- range $key, $value := .Values.extraArgs }}

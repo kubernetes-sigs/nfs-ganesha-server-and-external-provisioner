@@ -39,7 +39,7 @@ service:
 
 persistence:
   enabled: false
-  
+
   ## Existing Persistent Volume Claim
   ## This should be used with persistence.enabled=true
   ## If defined, an existing volume claim will be used, instead
@@ -95,6 +95,12 @@ rbac:
   ## Ignored if rbac.create is true
   ##
   serviceAccountName: default
+
+securityContext:
+  capabilities:
+    add:
+      - DAC_READ_SEARCH
+      - SYS_RESOURCE
 
 ## For creating the PriorityClass automatically:
 priorityClass:
