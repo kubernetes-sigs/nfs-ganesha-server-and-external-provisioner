@@ -4,7 +4,7 @@
 # This test is meant to verify that our Dockerfile can build successfully when
 # changed on the CPU architectures we have made it support being built on.
 #
-name: Build nfs-ganesha base container
+name: Build nfs-ganesha container
 
 on:
   push:
