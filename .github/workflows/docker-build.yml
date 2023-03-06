@@ -40,7 +40,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set GANESHA_VERSION
+      - name: Set ganesha version
         run: perl -ne 'print "$1\n" if /^ARG (GANESHA_VERSION=.+)$/' deploy/base/Dockerfile >> $GITHUB_ENV
 
       # Action reference: https://github.com/docker/build-push-action
