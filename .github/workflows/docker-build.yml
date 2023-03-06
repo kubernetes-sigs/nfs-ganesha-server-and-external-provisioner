@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - "deploy/base/Dockerfile"
+      - "deploy/docker/Dockerfile"
       - ".github/workflows/docker-build.yml"
 
 jobs:
@@ -39,6 +40,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set GANESHA_VERSION
+        run: perl -ne 'print "$1\n" if /^ARG (GANESHA_VERSION=.+)$/' deploy/base/Dockerfile >> $GITHUB_ENV
+
       # Action reference: https://github.com/docker/build-push-action
       - name: Build base container
         uses: docker/build-push-action@v2
@@ -47,7 +51,7 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
           push: true
           # keep tag in sync with deploy/base/Dockerfile:GANESHA_VERSION
-          tags: ghcr.io/${{ github.repository_owner }}/nfs-ganesha:V4.0.8
+          tags: ghcr.io/${{ github.repository_owner }}/nfs-ganesha:${{ GANESHA_VERSION }}
 
       - name: Setup go
         uses: actions/setup-go@v3
@@ -66,4 +70,4 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
           push: true
           # keep tag in sync with deploy/base/Dockerfile:GANESHA_VERSION
-          tags: ghcr.io/${{ github.repository_owner }}/nfs-ganesha:V4.0.8
+          tags: ghcr.io/${{ github.repository_owner }}/nfs-ganesha:${{ GANESHA_VERSION }}
