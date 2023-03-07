@@ -7,7 +7,7 @@ replicaCount: 1
 # imagePullSecrets:
 
 image:
-  repository: k8s.gcr.io/sig-storage/nfs-provisioner
+  repository: registry.k8s.io/sig-storage/nfs-provisioner
   tag: v4.0.8
   # digest:
   pullPolicy: IfNotPresent
