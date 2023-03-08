@@ -22,6 +22,10 @@ spec:
         chart: {{ include "nfs-provisioner.chart" . }}
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       # NOTE: This is 10 seconds longer than the default nfs-provisioner --grace-period value of 90sec
       terminationGracePeriodSeconds: 100
