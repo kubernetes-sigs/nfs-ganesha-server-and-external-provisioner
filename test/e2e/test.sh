@@ -49,7 +49,7 @@ cp -r $TEST_DIR/testing-manifests/* ./test/e2e/testing-manifests
 
 # Download kubectl to _output directory
 if [ ! -e "$HOME/bin/kubectl" ]; then
-  curl -o $HOME/bin/kubectl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  curl -o $HOME/bin/kubectl -LO https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl
   chmod +x $HOME/bin/kubectl
 fi
 
