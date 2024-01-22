@@ -166,3 +166,4 @@ Now that you have finished deploying the provisioner, go to [Usage](usage.md) fo
 * `failed-retry-threshold` - If the number of retries on provisioning failure need to be limited to a set number of attempts. Default 10
 * `server-hostname` - The hostname for the NFS server to export from. Only applicable when running out-of-cluster i.e. it can only be set if either master or kubeconfig are set. If unset, the first IP output by `hostname -i` is used.
 * `device-based-fsids` - If file system handles created by NFS Ganesha should be based on major/minor device IDs of the backing storage volume ('/export'). When running a cloud based kubernetes service (like Googles GKE service) set this to `false` as it might affect client connections on restarts of the nfs provisioner pod. Default true.
+* `disable-id-mapping` - Configure NFS Ganesha to disable ID mapping for NFSv4 mounts. Can only be set if both run-server and use-ganesha are true. Default false.

@@ -68,12 +68,13 @@ NFS_Core_Param
 NFSV4
 {
 	Grace_Period = 90;
+	Only_Numeric_Owners = false;
 }
 `)
 
 // Setup sets up various prerequisites and settings for the server. If an error
 // is encountered at any point it returns it instantly
-func Setup(ganeshaConfig string, gracePeriod uint, fsidDevice bool) error {
+func Setup(ganeshaConfig string, gracePeriod uint, fsidDevice, disableIDMapping bool) error {
 	// Start rpcbind if it is not started yet
 	cmd := exec.Command("/usr/sbin/rpcinfo", "127.0.0.1")
 	if err := cmd.Run(); err != nil {
@@ -107,6 +108,10 @@ func Setup(ganeshaConfig string, gracePeriod uint, fsidDevice bool) error {
 		}
 	}
 	err = setGracePeriod(ganeshaConfig, gracePeriod)
+	if err != nil {
+		return fmt.Errorf("error setting grace period to ganesha config: %v", err)
+	}
+	err = setNumericOwners(ganeshaConfig, disableIDMapping)
 	if err != nil {
 		return fmt.Errorf("error setting grace period to ganesha config: %v", err)
 	}
@@ -263,6 +268,46 @@ func setGracePeriod(ganeshaConfig string, gracePeriod uint) error {
 		file.Sync()
 	} else {
 		// Grace_Period line there, just replace it
+		replaced := strings.Replace(string(read), string(oldLine), newLine, -1)
+		err = ioutil.WriteFile(ganeshaConfig, []byte(replaced), 0)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func setNumericOwners(ganeshaConfig string, numericOwners bool) error {
+	newLine := fmt.Sprintf("Only_Numeric_Owners = %v;", numericOwners)
+
+	re := regexp.MustCompile("Only_Numeric_Owners = (true|false);")
+
+	read, err := ioutil.ReadFile(ganeshaConfig)
+	if err != nil {
+		return err
+	}
+
+	oldLine := re.Find(read)
+
+	var file *os.File
+	if oldLine == nil {
+		// Only_Numeric_Owners line not there, append it after Grace_Period
+		re := regexp.MustCompile("Grace_Period = [0-9]+;")
+
+		gracePeriod := re.Find(read)
+
+		block := string(gracePeriod) + "\n" +
+			"\t" + newLine
+
+		replaced := strings.Replace(string(read), string(gracePeriod), block, -1)
+		err = ioutil.WriteFile(ganeshaConfig, []byte(replaced), 0)
+		if err != nil {
+			return err
+		}
+		file.Sync()
+	} else {
+		// Only_Numeric_Owners line there, just replace it
 		replaced := strings.Replace(string(read), string(oldLine), newLine, -1)
 		err = ioutil.WriteFile(ganeshaConfig, []byte(replaced), 0)
 		if err != nil {
