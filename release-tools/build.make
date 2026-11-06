@@ -45,9 +45,10 @@ REV=$(shell git describe --long --tags --match='v*' --dirty 2>/dev/null || git r
 # Determined dynamically.
 IMAGE_TAGS=
 
-# A "canary" image gets built if the current commit is the head of the remote "master" branch.
+# A "canary" image gets built if the current commit is the head of the remote "master" or "main" branch.
 # That branch does not exist when building some other branch in TravisCI.
 IMAGE_TAGS+=$(shell if [ "$$(git rev-list -n1 HEAD)" = "$$(git rev-list -n1 origin/master 2>/dev/null)" ]; then echo "canary"; fi)
+IMAGE_TAGS+=$(shell if [ "$$(git rev-list -n1 HEAD)" = "$$(git rev-list -n1 origin/main 2>/dev/null)" ]; then echo "canary"; fi)
 
 # A "X.Y.Z-canary" image gets built if the current commit is the head of a "origin/release-X.Y.Z" branch.
 # The actual suffix does not matter, only the "release-" prefix is checked.
@@ -62,15 +63,15 @@ IMAGE_NAME=$(REGISTRY_NAME)/$*
 
 ifdef V
 # Adding "-alsologtostderr" assumes that all test binaries contain glog. This is not guaranteed.
-TESTARGS = -v -args -alsologtostderr -v 5
+TESTARGS = -race -v -args -alsologtostderr -v 5
 else
-TESTARGS =
+TESTARGS = -race
 endif
 
 # Specific packages can be excluded from each of the tests below by setting the *_FILTER_CMD variables
 # to something like "| grep -v 'github.com/kubernetes-csi/project/pkg/foobar'". See usage below.
 
-# BUILD_PLATFORMS contains a set of tuples [os arch suffix base_image addon_image]
+# BUILD_PLATFORMS contains a set of tuples [os arch buildx_platform suffix base_image addon_image]
 # separated by semicolon. An empty variable or empty entry (= just a
 # semicolon) builds for the default platform of the current Go
 # toolchain.
@@ -85,12 +86,12 @@ FULL_LDFLAGS = $(LDFLAGS) $(IMPORTPATH_LDFLAGS) $(EXT_LDFLAGS)
 # defined by BUILD_PLATFORMS.
 $(CMDS:%=build-%): build-%: check-go-version-go
 	mkdir -p bin
-	# os_arch_seen captures all of the $$os-$$arch seen for the current binary
-	# that we want to build, if we've seen an $$os-$$arch before it means that
+	# os_arch_seen captures all of the $$os-$$arch-$$buildx_platform seen for the current binary
+	# that we want to build, if we've seen an $$os-$$arch-$$buildx_platform before it means that
 	# we don't need to build it again, this is done to avoid building
 	# the windows binary multiple times (see the default value of $$BUILD_PLATFORMS)
-	export os_arch_seen="" && echo '$(BUILD_PLATFORMS)' | tr ';' '\n' | while read -r os arch suffix base_image addon_image; do \
-		os_arch_seen_pre=$${os_arch_seen%%$$os-$$arch*}; \
+	export os_arch_seen="" && echo '$(BUILD_PLATFORMS)' | tr ';' '\n' | while read -r os arch buildx_platform suffix base_image addon_image; do \
+		os_arch_seen_pre=$${os_arch_seen%%$$os-$$arch-$$buildx_platform*}; \
 		if ! [ $${#os_arch_seen_pre} = $${#os_arch_seen} ]; then \
 			continue; \
 		fi; \
@@ -98,7 +99,7 @@ $(CMDS:%=build-%): build-%: check-go-version-go
 			echo "Building $* for GOOS=$$os GOARCH=$$arch failed, see error(s) above."; \
 			exit 1; \
 		fi; \
-		os_arch_seen+=";$$os-$$arch"; \
+		os_arch_seen+=";$$os-$$arch-$$buildx_platform"; \
 	done
 
 $(CMDS:%=container-%): container-%: build-%
@@ -143,27 +144,28 @@ DOCKER_BUILDX_CREATE_ARGS ?=
 # Windows binaries can be built before adding a Dockerfile for it.
 #
 # BUILD_PLATFORMS determines which individual images are included in the multiarch image.
-# PULL_BASE_REF must be set to 'master', 'release-x.y', or a tag name, and determines
+# PULL_BASE_REF must be set to 'master', 'main', 'release-x.y', or a tag name, and determines
 # the tag for the resulting multiarch image.
 $(CMDS:%=push-multiarch-%): push-multiarch-%: check-pull-base-ref build-%
 	set -ex; \
 	export DOCKER_CLI_EXPERIMENTAL=enabled; \
-	docker buildx create $(DOCKER_BUILDX_CREATE_ARGS) --use --name multiarchimage-buildertest; \
+	docker buildx create $(DOCKER_BUILDX_CREATE_ARGS) --use --name multiarchimage-buildertest --driver-opt image=moby/buildkit:v0.10.6; \
 	trap "docker buildx rm multiarchimage-buildertest" EXIT; \
 	dockerfile_linux=$$(if [ -e ./$(CMDS_DIR)/$*/Dockerfile ]; then echo ./$(CMDS_DIR)/$*/Dockerfile; else echo Dockerfile; fi); \
 	dockerfile_windows=$$(if [ -e ./$(CMDS_DIR)/$*/Dockerfile.Windows ]; then echo ./$(CMDS_DIR)/$*/Dockerfile.Windows; else echo Dockerfile.Windows; fi); \
 	if [ '$(BUILD_PLATFORMS)' ]; then build_platforms='$(BUILD_PLATFORMS)'; else build_platforms="linux amd64"; fi; \
 	if ! [ -f "$$dockerfile_windows" ]; then \
-		build_platforms="$$(echo "$$build_platforms" | sed -e 's/windows *[^ ]* *.exe *[^ ]* *[^ ]*//g' -e 's/; *;/;/g' -e 's/;[ ]*$$//')"; \
+		build_platforms="$$(echo "$$build_platforms" | sed -e 's/windows *[^ ]* *[^ ]* *.exe *[^ ]* *[^ ]*//g' -e 's/; *;/;/g' -e 's/;[ ]*$$//')"; \
 	fi; \
 	pushMultiArch () { \
 		tag=$$1; \
-		echo "$$build_platforms" | tr ';' '\n' | while read -r os arch suffix base_image addon_image; do \
+		echo "$$build_platforms" | tr ';' '\n' | while read -r os arch buildx_platform suffix base_image addon_image; do \
 			escaped_base_image=$${base_image/:/-}; \
+			escaped_buildx_platform=$${buildx_platform//\//-}; \
 			if ! [ -z $$escaped_base_image ]; then escaped_base_image+="-"; fi; \
 			docker buildx build --push \
-				--tag $(IMAGE_NAME):$$arch-$$os-$$escaped_base_image$$tag \
-				--platform=$$os/$$arch \
+				--tag $(IMAGE_NAME):$$escaped_buildx_platform-$$os-$$escaped_base_image$$tag \
+				--platform=$$os/$$buildx_platform \
 				--file $$(eval echo \$${dockerfile_$$os}) \
 				--build-arg binary=./bin/$*$$suffix \
 				--build-arg ARCH=$$arch \
@@ -172,13 +174,14 @@ $(CMDS:%=push-multiarch-%): push-multiarch-%: check-pull-base-ref build-%
 				--label revision=$(REV) \
 				.; \
 		done; \
-		images=$$(echo "$$build_platforms" | tr ';' '\n' | while read -r os arch suffix base_image addon_image; do \
+		images=$$(echo "$$build_platforms" | tr ';' '\n' | while read -r os arch buildx_platform suffix base_image addon_image; do \
 			escaped_base_image=$${base_image/:/-}; \
+			escaped_buildx_platform=$${buildx_platform//\//-}; \
 			if ! [ -z $$escaped_base_image ]; then escaped_base_image+="-"; fi; \
-			echo $(IMAGE_NAME):$$arch-$$os-$$escaped_base_image$$tag; \
+			echo $(IMAGE_NAME):$$escaped_buildx_platform-$$os-$$escaped_base_image$$tag; \
 		done); \
 		docker manifest create --amend $(IMAGE_NAME):$$tag $$images; \
-		echo "$$build_platforms" | tr ';' '\n' | while read -r os arch suffix base_image addon_image; do \
+		echo "$$build_platforms" | tr ';' '\n' | while read -r os arch buildx_platform suffix base_image addon_image; do \
 			if [ $$os = "windows" ]; then \
 				escaped_base_image=$${base_image/:/-}; \
 				if ! [ -z $$escaped_base_image ]; then escaped_base_image+="-"; fi; \
@@ -189,7 +192,7 @@ $(CMDS:%=push-multiarch-%): push-multiarch-%: check-pull-base-ref build-%
 		done; \
 		docker manifest push -p $(IMAGE_NAME):$$tag; \
 	}; \
-	if [ $(PULL_BASE_REF) = "master" ]; then \
+	if [ $(PULL_BASE_REF) = "master" ] || [ $(PULL_BASE_REF) = "main" ]; then \
 			: "creating or overwriting canary image"; \
 			pushMultiArch canary; \
 	elif echo $(PULL_BASE_REF) | grep -q -e 'release-*' ; then \
@@ -207,7 +210,7 @@ $(CMDS:%=push-multiarch-%): push-multiarch-%: check-pull-base-ref build-%
 .PHONY: check-pull-base-ref
 check-pull-base-ref:
 	if ! [ "$(PULL_BASE_REF)" ]; then \
-		echo >&2 "ERROR: PULL_BASE_REF must be set to 'master', 'release-x.y', or a tag name."; \
+		echo >&2 "ERROR: PULL_BASE_REF must be set to 'master', 'main', 'release-x.y', or a tag name."; \
 		exit 1; \
 	fi
 
@@ -236,9 +239,10 @@ test: test-fmt
 test-fmt:
 	@ echo; echo "### $@:"
 	files=$$(find . -name '*.go' | grep -v './vendor' $(TEST_FMT_FILTER_CMD)); \
-	if [ $$(gofmt -d $$files | wc -l) -ne 0 ]; then \
+	gofmt=$$(go env GOROOT)/bin/gofmt; \
+	if [ $$($$gofmt -d $$files | wc -l) -ne 0 ]; then \
 		echo "formatting errors:"; \
-		gofmt -d $$files; \
+		$$gofmt -d $$files; \
 		false; \
 	fi
 
@@ -320,3 +324,10 @@ test-spelling:
 test-boilerplate:
 	@ echo; echo "### $@:"
 	@ ./release-tools/verify-boilerplate.sh "$(pwd)"
+
+# Test klog usage. This test is optional and must be explicitly added to `test` target in the main Makefile:
+# test: test-logcheck
+.PHONY: test-logcheck
+test-logcheck:
+	@ echo; echo "### $@:"
+	@ ./release-tools/verify-logcheck.sh
