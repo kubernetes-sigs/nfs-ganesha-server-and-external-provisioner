@@ -16,11 +16,8 @@
 # To promote release images, see https://github.com/kubernetes/k8s.io/tree/HEAD/registry.k8s.io/images/k8s-staging-sig-storage.
 
 # This must be specified in seconds. If omitted, defaults to 600s (10 mins).
-# Building the Dockerfile we maintain for non-amd64 architectures has been found
-# to take ~1 hour, as architecture emulation is slow. Since we may build ~4
-# non-amd64 architectures, six hours is set as a timeout to allow for some
-# margin.
-timeout: 21600s # 6h in seconds
+# Building three images in external-snapshotter takes more than an hour.
+timeout: 7200s
 # This prevents errors if you don't use both _GIT_TAG and _PULL_BASE_REF,
 # or any new substitutions added in the future.
 options:
@@ -29,7 +26,7 @@ steps:
   # The image must contain bash and curl. Ideally it should also contain
   # the desired version of Go (currently defined in release-tools/prow.sh),
   # but that just speeds up the build and is not required.
-  - name: 'gcr.io/k8s-staging-test-infra/gcb-docker-gcloud:v20211118-2f2d816b90'
+  - name: 'gcr.io/k8s-staging-test-infra/gcb-docker-gcloud:v20260205-38cfa9523f'
     entrypoint: ./.cloudbuild.sh
     env:
     - GIT_TAG=${_GIT_TAG}
