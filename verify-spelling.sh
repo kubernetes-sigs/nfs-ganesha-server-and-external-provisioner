@@ -41,7 +41,7 @@ if [[ -z "$(command -v misspell)" ]]; then
   # perform go get in a temp dir as we are not tracking this version in a go module
   # if we do the go get in the repo, it will create / update a go.mod and go.sum
   cd "${TMP_DIR}"
-  GO111MODULE=on GOBIN="${TMP_DIR}" go get "github.com/client9/misspell/cmd/misspell@${TOOL_VERSION}"
+  GO111MODULE=on GOBIN="${TMP_DIR}" go install "github.com/client9/misspell/cmd/misspell@${TOOL_VERSION}"
   export PATH="${TMP_DIR}:${PATH}"
 fi
 
@@ -50,7 +50,7 @@ RES=0
 echo "Checking spelling..."
 ERROR_LOG="${TMP_DIR}/errors.log"
 cd "${ROOT}"
-git ls-files | grep -v vendor | xargs misspell > "${ERROR_LOG}"
+git ls-files -z | grep -z -v vendor | xargs -0 misspell -- > "${ERROR_LOG}"
 if [[ -s "${ERROR_LOG}" ]]; then
   sed 's/^/error: /' "${ERROR_LOG}" # add 'error' to each line to highlight in e2e status
   echo "Found spelling errors!"
